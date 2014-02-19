@@ -1,0 +1,749 @@
+<!-- combined two files, so there are duplicates.  RCLM-presentation.Rmd has more efficient (compact) code. -->
+<!-- source data is from csv files, not the "original" SPSS sav files -->
+
+Summary of Fall 2013 survey data
+========================================================
+
+In this script we import the Fall 2013 MASC 351 survey data and calculate simple descriptive statistics.
+
+First we import the data from reduced csv files that were exported from Qualtrics through SPSS format intermediary.
+
+```{r echo=FALSE}
+rm(list=ls())
+setwd("~/Dropbox/KATE Admin/KATE-Fall-2013/")
+library("likert")
+diversity.1 <- read.csv("Diversity_Part_1_Fall_2013_reduced.csv", header=TRUE, sep=",", quote="\"")
+diversity.2 <- read.csv("Diversity_Part_2_Fall_2013_reduced.csv", header=TRUE, sep=",", quote="\"")
+str(diversity.1)
+str(diversity.2)
+```
+
+Then we process the data from the first survey
+
+```{r echo=FALSE}
+part1.Q7 <- data.frame(diversity.1$Q7_1, diversity.1$Q7_2, diversity.1$Q7_3, diversity.1$Q7_4, diversity.1$Q7_5, diversity.1$Q7_6, diversity.1$Q7_7)
+names(part1.Q7) <- c("Q7_1","Q7_2","Q7_3","Q7_4","Q7_5","Q7_6","Q7_7")
+
+part1.Q4 <- data.frame(diversity.1$Q4_1[1:26], diversity.1$Q4_2[1:26], diversity.1$Q4_3[1:26], diversity.1$Q4_4[1:26], diversity.1$Q4_5[1:26], diversity.1$Q4_6[1:26], diversity.1$Q4_7[1:26])
+names(part1.Q4) <- c("Q4_1","Q4_2","Q4_3","Q4_4","Q4_5","Q4_6","Q4_7")
+```
+
+Followed by the data from the second survey
+
+```{r echo=FALSE}
+part2.Q2 <- data.frame(diversity.2$Q2_1,
+                       diversity.2$Q2_2,
+                       diversity.2$Q2_3,
+                       diversity.2$Q2_4,
+                       diversity.2$Q2_5,
+                       diversity.2$Q2_6,
+                       diversity.2$Q2_7,
+                       diversity.2$Q2_8,
+                       diversity.2$Q2_9,
+                       diversity.2$Q2_10,
+                       diversity.2$Q2_11,
+                       diversity.2$Q2_12,
+                       diversity.2$Q2_13,
+                       diversity.2$Q2_14)
+names(part2.Q2) <- c("Q2_1","Q2_2","Q2_3","Q2_4","Q2_5","Q2_6","Q2_7","Q2_8","Q2_9","Q2_10","Q2_11","Q2_12","Q2_13","Q2_14")
+
+part2.Q4 <- data.frame(diversity.2$Q4_1[1:24],
+                       diversity.2$Q4_2[1:24],
+                       diversity.2$Q4_3[1:24],
+                       diversity.2$Q4_4[1:24],
+                       diversity.2$Q4_5[1:24],
+                       diversity.2$Q4_6[1:24],
+                       diversity.2$Q4_7[1:24],
+                       diversity.2$Q4_8[1:24],
+                       diversity.2$Q4_9[1:24],
+                       diversity.2$Q4_10[1:24],
+                       diversity.2$Q4_11[1:24],
+                       diversity.2$Q4_12[1:24],
+                       diversity.2$Q4_13[1:24],
+                       diversity.2$Q4_14[1:24])
+names(part2.Q4) <- c("Q4_1","Q4_2","Q4_3","Q4_4","Q4_5","Q4_6","Q4_7","Q4_8","Q4_9","Q4_10","Q4_11","Q4_12","Q4_13","Q4_14")
+```
+
+The values of the survey are based on a Likert scale, 1 to 4 with the following values:
+
+"No change" (1), "made me rethink my awareness of diversity issues" (2), "improved my awareness of diversity issues somewhat" (3), "improved my awareness of diversity issues a lot" (4)
+
+
+## We replace the integer values with actual responses ##
+
+When you export the results from Qualtrics, they are given as integer values.  Thus, first we change the values from integers to characters.
+
+```{r echo=FALSE}
+part1.Q4.char <- sapply(part1.Q4, as.character)
+part1.Q7.char <- sapply(part1.Q7, as.character)
+part2.Q2.char <- sapply(part2.Q2, as.character)
+part2.Q4.char <- sapply(part2.Q4, as.character)
+```
+
+The we replace the numbers with the appropriate character strings.
+```{r echo=FALSE}
+part1.Q7.char.temp <- gsub("1","No change",part1.Q7.char)
+part1.Q7.char.temp <- gsub("2","Made me rethink",part1.Q7.char.temp)
+part1.Q7.char.temp <- gsub("3","Improved somewhat",part1.Q7.char.temp)
+part1.Q7.char.temp <- gsub("4","Improved a lot",part1.Q7.char.temp)
+part1.Q7.char <- data.frame(part1.Q7.char.temp)
+rm(part1.Q7.char.temp)
+
+part1.Q4.char.temp <- gsub("1","No change",part1.Q4.char)
+part1.Q4.char.temp <- gsub("2","Made me rethink",part1.Q4.char.temp)
+part1.Q4.char.temp <- gsub("3","Improved somewhat",part1.Q4.char.temp)
+part1.Q4.char.temp <- gsub("4","Improved a lot",part1.Q4.char.temp)
+part1.Q4.char <- data.frame(part1.Q4.char.temp)
+rm(part1.Q4.char.temp)
+
+part2.Q2.char.temp <- gsub("1","No change",part2.Q2.char)
+part2.Q2.char.temp <- gsub("2","Made me rethink",part2.Q2.char.temp)
+part2.Q2.char.temp <- gsub("3","Improved somewhat",part2.Q2.char.temp)
+part2.Q2.char.temp <- gsub("4","Improved a lot",part2.Q2.char.temp)
+part2.Q2.char <- data.frame(part2.Q2.char.temp)
+rm(part2.Q2.char.temp)
+
+part2.Q4.char.temp <- gsub("1","No change",part2.Q4.char)
+part2.Q4.char.temp <- gsub("2","Made me rethink",part2.Q4.char.temp)
+part2.Q4.char.temp <- gsub("3","Improved somewhat",part2.Q4.char.temp)
+part2.Q4.char.temp <- gsub("4","Improved a lot",part2.Q4.char.temp)
+part2.Q4.char <- data.frame(part2.Q4.char.temp)
+rm(part2.Q4.char.temp)
+```
+
+All dataframes need the same levels to convert them to likert objects
+```{r echo=FALSE}
+part1.Q4.char$Q4_1 <- ordered(part1.Q4$Q4_1, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q4.char$Q4_2 <- ordered(part1.Q4$Q4_2, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q4.char$Q4_3 <- ordered(part1.Q4$Q4_3, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q4.char$Q4_4 <- ordered(part1.Q4$Q4_4, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q4.char$Q4_5 <- ordered(part1.Q4$Q4_5, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q4.char$Q4_6 <- ordered(part1.Q4$Q4_6, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q4.char$Q4_7 <- ordered(part1.Q4$Q4_7, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+
+part1.Q7.char$Q7_1 <- ordered(part1.Q7$Q7_1, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q7.char$Q7_2 <- ordered(part1.Q7$Q7_2, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q7.char$Q7_3 <- ordered(part1.Q7$Q7_3, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q7.char$Q7_4 <- ordered(part1.Q7$Q7_4, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q7.char$Q7_5 <- ordered(part1.Q7$Q7_5, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q7.char$Q7_6 <- ordered(part1.Q7$Q7_6, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q7.char$Q7_7 <- ordered(part1.Q7$Q7_7, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+
+part2.Q2.char$Q2_1  <- ordered(part2.Q2$Q2_1, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_2  <- ordered(part2.Q2$Q2_2, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_3  <- ordered(part2.Q2$Q2_3, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_4  <- ordered(part2.Q2$Q2_4, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_5  <- ordered(part2.Q2$Q2_5, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_6  <- ordered(part2.Q2$Q2_6, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_7  <- ordered(part2.Q2$Q2_7, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_8  <- ordered(part2.Q2$Q2_8, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_9  <- ordered(part2.Q2$Q2_9, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_10 <- ordered(part2.Q2$Q2_10, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_11 <- ordered(part2.Q2$Q2_11, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_12 <- ordered(part2.Q2$Q2_12, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_13 <- ordered(part2.Q2$Q2_13, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_14 <- ordered(part2.Q2$Q2_14, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+
+part2.Q4.char$Q4_1  <- ordered(part2.Q4$Q4_1, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_2  <- ordered(part2.Q4$Q4_2, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_3  <- ordered(part2.Q4$Q4_3, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_4  <- ordered(part2.Q4$Q4_4, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_5  <- ordered(part2.Q4$Q4_5, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_6  <- ordered(part2.Q4$Q4_6, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_7  <- ordered(part2.Q4$Q4_7, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_8  <- ordered(part2.Q4$Q4_8, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_9  <- ordered(part2.Q4$Q4_9, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_10 <- ordered(part2.Q4$Q4_10, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_11 <- ordered(part2.Q4$Q4_11, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_12 <- ordered(part2.Q4$Q4_12, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_13 <- ordered(part2.Q4$Q4_13, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_14 <- ordered(part2.Q4$Q4_14, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+```
+
+Assign the question to each column
+```{r echo=FALSE}
+names(part1.Q4.char) <- c("Readings and questions from the Polya textbook",
+                          "Readings and questions from the Responding to Diversity textbook",
+                          "Presentations and discussions in class about culture and diversity",
+                          "Dinner Problem Activity: a. Solving the problem",
+                          "Dinner Problem Activity: b. Responding to student misconceptions",
+                          "Dinner Problem Activity: c. Planning a lesson",
+                          "Dinner Problem Activity: d. Responding to student questions")
+
+names(part1.Q7.char) <- c("Readings and questions from the Polya textbook",
+                          "Readings and questions from the Responding to Diversity textbook",
+                          "Presentations and discussions in class about culture and diversity",
+                          "Dinner Problem Activity: a. Solving the problem",
+                          "Dinner Problem Activity: b. Responding to student misconceptions",
+                          "Dinner Problem Activity: c. Planning a lesson",
+                          "Dinner Problem Actitivy: d. Responding to student questions")
+
+names(part2.Q2.char) <- c("Diversity Readings (Ladson-Billings; Milner)",
+                          "Guest Speaker: Dr. Chance Lewis",
+                          "Soda Can Problem: a. Solving the problem",
+                          "Soda Can Problem: b. Responding to student misconceptions",
+                          "Soda Can Problem: c. Planning a lesson",
+                          "Soda Can Problem: d. Responding to student",
+                          "Meet the Middle Grade Students in SL",
+                          "Tutoring the Middle Grade Students in SL",
+                          "Analysis of Language Moves from your tutoring",
+                          "Guest Speaker: Dr. Kathryn McKenzie",
+                          "Food Drive Problem: a. Solving the problem",
+                          "Food Drive Problem: b. Responding to student misconceptions",
+                          "Food Drive Problem: c. Planning a lesson",
+                          "Food Drive Problem: d. Responding to student questions")
+
+names(part2.Q4.char) <- c("Diversity Readings (Ladson-Billings; Milner)",
+                          "Guest Speaker: Dr. Chance Lewis",
+                          "Soda Can Problem: a. Solving the problem",
+                          "Soda Can Problem: b. Responding to student misconceptions",
+                          "Soda Can Problem: c. Planning a lesson",
+                          "Soda Can Problem: d. Responding to student",
+                          "Meet the Middle Grade Students in SL",
+                          "Tutoring the Middle Grade Students in SL",
+                          "Analysis of Language Moves from your tutoring",
+                          "Guest Speaker: Dr. Kathryn McKenzie",
+                          "Food Drive Problem: a. Solving the problem",
+                          "Food Drive Problem: b. Responding to student misconceptions",
+                          "Food Drive Problem: c. Planning a lesson",
+                          "Food Drive Problem: d. Responding to student questions")
+```
+
+Convert to Likert objects
+```{r echo=FALSE}
+part1.Q4.likert <- likert(part1.Q4.char)
+part1.Q7.likert <- likert(part1.Q7.char)
+part2.Q2.likert <- likert(part2.Q2.char)
+part2.Q4.likert <- likert(part2.Q4.char)
+```
+
+## Finally, plot the four main questions ##
+
+Part 1, Question 7 "How has each of the following activities CHANGED your AWARENESS about diversity issues?"
+```{r echo=FALSE, fig.width=10}
+plot(part1.Q7.likert, centered = FALSE, wrap = 25)
+```
+
+Part 1, Question 4 "How has each of the following activities CHANGED your KNOWLEDGE ABOUT TEACHING algebra diversity?"
+```{r echo=FALSE, fig.width=10}
+plot(part1.Q4.likert, centered = FALSE, wrap = 25)
+```
+
+Part 2, Question 2 "How has each of the following activities CHANGED your AWARENESS about diversity issues?"
+```{r echo=FALSE, fig.width=10}
+plot(part2.Q2.likert, centered = FALSE, wrap = 32)
+```
+
+Part 2, Question 4 "How has each of the following activities CHANGED your KNOWLEDGE ABOUT TEACHING algebra diversity?"
+```{r echo=FALSE, fig.width=10}
+plot(part2.Q4.likert, centered = FALSE, wrap = 32)
+```
+
+## "Heat" charts ##
+
+Heat charts also provide some summary values based on the 4 integer values as shown previously.
+
+Part 1, Question 7 "How has each of the following activities CHANGED your AWARENESS about diversity issues?"
+```{r echo=FALSE, fig.width=10}
+plot(part1.Q7.likert, type="heat")
+```
+
+Part 1, Question 4 "How has each of the following activities CHANGED your KNOWLEDGE ABOUT TEACHING algebra diversity?"
+```{r echo=FALSE, fig.width=10}
+plot(part1.Q4.likert, type="heat")
+```
+
+Part 2, Question 2 "How has each of the following activities CHANGED your AWARENESS about diversity issues?"
+```{r echo=FALSE, fig.width=10}
+plot(part2.Q2.likert, type="heat")
+```
+
+Part 2, Question 4 "How has each of the following activities CHANGED your KNOWLEDGE ABOUT TEACHING algebra diversity?"
+```{r echo=FALSE, fig.width=10}
+plot(part2.Q4.likert, type="heat")
+```
+
+<!-- ~/Dropbox/KATE Admin/KATE-Fall-2013/Summary-survey-fall-2013.Rmd -->
+
+Summary of Fall 2013 survey data
+========================================================
+
+In this script we import the Fall 2013 MASC 351 survey data and calculate simple descriptive statistics.
+
+First we import the data from reduced csv files that were exported from Qualtrics.
+
+```{r echo=FALSE}
+rm(list=ls())
+setwd("~/Dropbox/KATE Admin/KATE-Fall-2013/")
+library("likert")
+diversity.1 <- read.csv("Diversity_Part_1_Fall_2013_reduced.csv", header=TRUE, sep=",", quote="\"")
+diversity.2 <- read.csv("Diversity_Part_2_Fall_2013_reduced.csv", header=TRUE, sep=",", quote="\"")
+str(diversity.1)
+str(diversity.2)
+```
+
+Then we process the data from the first survey
+
+```{r echo=FALSE}
+part1.Q7 <- data.frame(diversity.1$Q7_1, diversity.1$Q7_2, diversity.1$Q7_3, diversity.1$Q7_4, diversity.1$Q7_5, diversity.1$Q7_6, diversity.1$Q7_7)
+names(part1.Q7) <- c("Q7_1","Q7_2","Q7_3","Q7_4","Q7_5","Q7_6","Q7_7")
+
+part1.Q4 <- data.frame(diversity.1$Q4_1[1:26], diversity.1$Q4_2[1:26], diversity.1$Q4_3[1:26], diversity.1$Q4_4[1:26], diversity.1$Q4_5[1:26], diversity.1$Q4_6[1:26], diversity.1$Q4_7[1:26])
+names(part1.Q4) <- c("Q4_1","Q4_2","Q4_3","Q4_4","Q4_5","Q4_6","Q4_7")
+```
+
+Followed by the data from the second survey
+
+```{r echo=FALSE}
+part2.Q2 <- data.frame(diversity.2$Q2_1,
+                       diversity.2$Q2_2,
+                       diversity.2$Q2_3,
+                       diversity.2$Q2_4,
+                       diversity.2$Q2_5,
+                       diversity.2$Q2_6,
+                       diversity.2$Q2_7,
+                       diversity.2$Q2_8,
+                       diversity.2$Q2_9,
+                       diversity.2$Q2_10,
+                       diversity.2$Q2_11,
+                       diversity.2$Q2_12,
+                       diversity.2$Q2_13,
+                       diversity.2$Q2_14)
+names(part2.Q2) <- c("Q2_1","Q2_2","Q2_3","Q2_4","Q2_5","Q2_6","Q2_7","Q2_8","Q2_9","Q2_10","Q2_11","Q2_12","Q2_13","Q2_14")
+
+part2.Q4 <- data.frame(diversity.2$Q4_1[1:24],
+                       diversity.2$Q4_2[1:24],
+                       diversity.2$Q4_3[1:24],
+                       diversity.2$Q4_4[1:24],
+                       diversity.2$Q4_5[1:24],
+                       diversity.2$Q4_6[1:24],
+                       diversity.2$Q4_7[1:24],
+                       diversity.2$Q4_8[1:24],
+                       diversity.2$Q4_9[1:24],
+                       diversity.2$Q4_10[1:24],
+                       diversity.2$Q4_11[1:24],
+                       diversity.2$Q4_12[1:24],
+                       diversity.2$Q4_13[1:24],
+                       diversity.2$Q4_14[1:24])
+names(part2.Q4) <- c("Q4_1","Q4_2","Q4_3","Q4_4","Q4_5","Q4_6","Q4_7","Q4_8","Q4_9","Q4_10","Q4_11","Q4_12","Q4_13","Q4_14")
+```
+
+Finally we calculate some descriptive statistics.  The values are based on a Likert scale, 1 to 4 with the following values:
+
+"No change", "made me rethink my awareness of diversity issues", "improved my awareness of diversity issues somewhat", "improved my awareness of diversity issues a lot"
+
+
+Part 1, Question 7 "How has each of the following activities CHANGED your AWARENESS about diversity issues?"
+
+Readings and questions from the *Polya* textbook
+```{r echo=FALSE}
+summary(part1.Q7$Q7_1)
+```
+
+Readings and questions from the *Responding to Diversity* textbook
+```{r echo=FALSE}
+summary(part1.Q7$Q7_2)
+```
+
+Presentations and discussions in class about culture and diversity
+```{r echo=FALSE}
+summary(part1.Q7$Q7_3)
+```
+
+Dinner Problem Activity: a. Solving the problem
+```{r echo=FALSE}
+summary(part1.Q7$Q7_4)
+```
+
+Dinner Problem Activity: b. Responding to student misconceptions
+```{r echo=FALSE}
+summary(part1.Q7$Q7_5)
+```
+
+Dinner Problem Activity: c. Planning a lesson
+```{r echo=FALSE}
+summary(part1.Q7$Q7_6)
+```
+
+Dinner Problem Activity: d. Responding to student questions
+```{r echo=FALSE}
+summary(part1.Q7$Q7_7)
+```
+
+
+Part 1, Question 4 "How has each of the following activities CHANGED your KNOWLEDGE ABOUT TEACHING algebra diversity?"
+
+Readings and questions from the Polya textbook
+```{r echo=FALSE}
+summary(part1.Q4$Q4_1)
+```
+
+Readings and questions from the *Responding to Diversity* textbook
+```{r echo=FALSE}
+summary(part1.Q4$Q4_2)
+```
+
+Presentations and discussions in class about culture and diversity
+```{r echo=FALSE}
+summary(part1.Q4$Q4_3)
+```
+
+Dinner Problem Activity: a. Solving the problem
+```{r echo=FALSE}
+summary(part1.Q4$Q4_4)
+```
+
+Dinner Problem Activity: b. Responding to student misconceptions
+```{r echo=FALSE}
+summary(part1.Q4$Q4_5)
+```
+
+Dinner Problem Activity: c. Planning a lesson
+```{r echo=FALSE}
+summary(part1.Q4$Q4_6)
+```
+
+Dinner Problem Activity: d. Responding to student questions
+```{r echo=FALSE}
+summary(part1.Q4$Q4_7)
+```
+
+
+Part 2, Question 2 "How has each of the following activities CHANGED your AWARENESS about diversity issues?"
+
+Diversity Readings (*Ladson-Billings; Milner*)
+```{r echo=FALSE}
+summary(part2.Q2$Q2_1)
+```
+
+Guest Speaker: Dr. Chance Lewis
+```{r echo=FALSE}
+summary(part2.Q2$Q2_2)
+```
+
+Soda Can Problem: a. Solving the problem
+```{r echo=FALSE}
+summary(part2.Q2$Q2_3)
+```
+
+Soda Can Problem: b. Responding to student misconceptions
+```{r echo=FALSE}
+summary(part2.Q2$Q2_4)
+```
+
+Soda Can Problem: c. Planning a lesson
+```{r echo=FALSE}
+summary(part2.Q2$Q2_5)
+```
+
+Soda Can Problem: d. Responding to student questions
+```{r echo=FALSE}
+summary(part2.Q2$Q2_6)
+```
+
+Meet the Middle Grade Students in SL
+```{r echo=FALSE}
+summary(part2.Q2$Q2_7)
+```
+
+Tutoring the Middle Grade Students in SL
+```{r echo=FALSE}
+summary(part2.Q2$Q2_8)
+```
+
+Analysis of Language Moves from your tutoring
+```{r echo=FALSE}
+summary(part2.Q2$Q2_9)
+```
+
+Guest Speaker: Dr. Kathryn McKenzie
+```{r echo=FALSE}
+summary(part2.Q2$Q2_10)
+```
+
+Food Drive Problem: a. Solving the problem
+```{r echo=FALSE}
+summary(part2.Q2$Q2_11)
+```
+
+Food Drive Problem: b. Responding to student misconceptions
+```{r echo=FALSE}
+summary(part2.Q2$Q2_12)
+```
+
+Food Drive Problem: c. Planning a lesson
+```{r echo=FALSE}
+summary(part2.Q2$Q2_13)
+```
+
+Food Drive Problem: d. Responding to student questions
+```{r echo=FALSE}
+summary(part2.Q2$Q2_14)
+```
+
+
+Part 2, Question 4 "How has each of the following activities CHANGED your KNOWLEDGE ABOUT TEACHING algebra diversity?"
+
+Diversity Readings (*Ladson-Billings; Milner*)
+```{r echo=FALSE}
+summary(part2.Q4$Q4_1)
+```
+
+Guest Speaker: Dr. Chance Lewis
+```{r echo=FALSE}
+summary(part2.Q4$Q4_2)
+```
+
+Soda Can Problem: a. Solving the problem
+```{r echo=FALSE}
+summary(part2.Q4$Q4_3)
+```
+
+Soda Can Problem: b. Responding to student misconceptions
+```{r echo=FALSE}
+summary(part2.Q4$Q4_4)
+```
+
+Soda Can Problem: c. Planning a lesson
+```{r echo=FALSE}
+summary(part2.Q4$Q4_5)
+```
+
+Soda Can Problem: d. Responding to student questions
+```{r echo=FALSE}
+summary(part2.Q4$Q4_6)
+```
+
+Meet the Middle Grade Students in SL
+```{r echo=FALSE}
+summary(part2.Q4$Q4_7)
+```
+
+Tutoring the Middle Grade Students in SL
+```{r echo=FALSE}
+summary(part2.Q4$Q4_8)
+```
+
+Analysis of Language Moves from your tutoring
+```{r echo=FALSE}
+summary(part2.Q4$Q4_9)
+```
+
+Guest Speaker: Dr. Kathryn McKenzie
+```{r echo=FALSE}
+summary(part2.Q4$Q4_10)
+```
+
+Food Drive Problem: a. Solving the problem
+```{r echo=FALSE}
+summary(part2.Q4$Q4_11)
+```
+
+Food Drive Problem: b. Responding to student misconceptions
+```{r echo=FALSE}
+summary(part2.Q4$Q4_12)
+```
+
+Food Drive Problem: c. Planning a lesson
+```{r echo=FALSE}
+summary(part2.Q4$Q4_13)
+```
+
+Food Drive Problem: d. Responding to student
+```{r echo=FALSE}
+summary(part2.Q4$Q4_14)
+```
+
+
+## We replace the integer values with actual responses ##
+
+First we change the values from integers to characters.
+```{r echo=FALSE}
+part1.Q4.char <- sapply(part1.Q4, as.character)
+part1.Q7.char <- sapply(part1.Q7, as.character)
+part2.Q2.char <- sapply(part2.Q2, as.character)
+part2.Q4.char <- sapply(part2.Q4, as.character)
+```
+
+The we replace the numbers with the appropriate character strings.
+```{r echo=FALSE}
+part1.Q7.char.temp <- gsub("1","No change",part1.Q7.char)
+part1.Q7.char.temp <- gsub("2","Made me rethink",part1.Q7.char.temp)
+part1.Q7.char.temp <- gsub("3","Improved somewhat",part1.Q7.char.temp)
+part1.Q7.char.temp <- gsub("4","Improved a lot",part1.Q7.char.temp)
+part1.Q7.char <- data.frame(part1.Q7.char.temp)
+rm(part1.Q7.char.temp)
+
+part1.Q4.char.temp <- gsub("1","No change",part1.Q4.char)
+part1.Q4.char.temp <- gsub("2","Made me rethink",part1.Q4.char.temp)
+part1.Q4.char.temp <- gsub("3","Improved somewhat",part1.Q4.char.temp)
+part1.Q4.char.temp <- gsub("4","Improved a lot",part1.Q4.char.temp)
+part1.Q4.char <- data.frame(part1.Q4.char.temp)
+rm(part1.Q4.char.temp)
+
+part2.Q2.char.temp <- gsub("1","No change",part2.Q2.char)
+part2.Q2.char.temp <- gsub("2","Made me rethink",part2.Q2.char.temp)
+part2.Q2.char.temp <- gsub("3","Improved somewhat",part2.Q2.char.temp)
+part2.Q2.char.temp <- gsub("4","Improved a lot",part2.Q2.char.temp)
+part2.Q2.char <- data.frame(part2.Q2.char.temp)
+rm(part2.Q2.char.temp)
+
+part2.Q4.char.temp <- gsub("1","No change",part2.Q4.char)
+part2.Q4.char.temp <- gsub("2","Made me rethink",part2.Q4.char.temp)
+part2.Q4.char.temp <- gsub("3","Improved somewhat",part2.Q4.char.temp)
+part2.Q4.char.temp <- gsub("4","Improved a lot",part2.Q4.char.temp)
+part2.Q4.char <- data.frame(part2.Q4.char.temp)
+rm(part2.Q4.char.temp)
+```
+
+All dataframes need the same levels to convert them to likert objects
+```{r echo=FALSE}
+part1.Q4.char$Q4_1 <- ordered(part1.Q4$Q4_1, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q4.char$Q4_2 <- ordered(part1.Q4$Q4_2, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q4.char$Q4_3 <- ordered(part1.Q4$Q4_3, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q4.char$Q4_4 <- ordered(part1.Q4$Q4_4, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q4.char$Q4_5 <- ordered(part1.Q4$Q4_5, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q4.char$Q4_6 <- ordered(part1.Q4$Q4_6, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q4.char$Q4_7 <- ordered(part1.Q4$Q4_7, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+
+part1.Q7.char$Q7_1 <- ordered(part1.Q7$Q7_1, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q7.char$Q7_2 <- ordered(part1.Q7$Q7_2, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q7.char$Q7_3 <- ordered(part1.Q7$Q7_3, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q7.char$Q7_4 <- ordered(part1.Q7$Q7_4, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q7.char$Q7_5 <- ordered(part1.Q7$Q7_5, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q7.char$Q7_6 <- ordered(part1.Q7$Q7_6, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part1.Q7.char$Q7_7 <- ordered(part1.Q7$Q7_7, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+
+part2.Q2.char$Q2_1  <- ordered(part2.Q2$Q2_1, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_2  <- ordered(part2.Q2$Q2_2, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_3  <- ordered(part2.Q2$Q2_3, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_4  <- ordered(part2.Q2$Q2_4, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_5  <- ordered(part2.Q2$Q2_5, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_6  <- ordered(part2.Q2$Q2_6, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_7  <- ordered(part2.Q2$Q2_7, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_8  <- ordered(part2.Q2$Q2_8, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_9  <- ordered(part2.Q2$Q2_9, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_10 <- ordered(part2.Q2$Q2_10, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_11 <- ordered(part2.Q2$Q2_11, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_12 <- ordered(part2.Q2$Q2_12, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_13 <- ordered(part2.Q2$Q2_13, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q2.char$Q2_14 <- ordered(part2.Q2$Q2_14, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+
+part2.Q4.char$Q4_1  <- ordered(part2.Q4$Q4_1, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_2  <- ordered(part2.Q4$Q4_2, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_3  <- ordered(part2.Q4$Q4_3, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_4  <- ordered(part2.Q4$Q4_4, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_5  <- ordered(part2.Q4$Q4_5, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_6  <- ordered(part2.Q4$Q4_6, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_7  <- ordered(part2.Q4$Q4_7, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_8  <- ordered(part2.Q4$Q4_8, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_9  <- ordered(part2.Q4$Q4_9, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_10 <- ordered(part2.Q4$Q4_10, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_11 <- ordered(part2.Q4$Q4_11, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_12 <- ordered(part2.Q4$Q4_12, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_13 <- ordered(part2.Q4$Q4_13, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+part2.Q4.char$Q4_14 <- ordered(part2.Q4$Q4_14, levels=c(1,2,3,4), labels=c("No change","Made me rethink","Improved somewhat","Improved a lot"))
+```
+
+Assign the question to each column
+```{r echo=FALSE}
+names(part1.Q4.char) <- c("Readings and questions from the Polya textbook",
+                          "Readings and questions from the Responding to Diversity textbook",
+                          "Presentations and discussions in class about culture and diversity",
+                          "Dinner Problem Activity: a. Solving the problem",
+                          "Dinner Problem Activity: b. Responding to student misconceptions",
+                          "Dinner Problem Activity: c. Planning a lesson",
+                          "Dinner Problem Activity: d. Responding to student questions")
+
+names(part1.Q7.char) <- c("Readings and questions from the Polya textbook",
+                          "Readings and questions from the Responding to Diversity textbook",
+                          "Presentations and discussions in class about culture and diversity",
+                          "Dinner Problem Activity: a. Solving the problem",
+                          "Dinner Problem Activity: b. Responding to student misconceptions",
+                          "Dinner Problem Activity: c. Planning a lesson",
+                          "Dinner Problem Actitivy: d. Responding to student questions")
+
+names(part2.Q2.char) <- c("Diversity Readings (Ladson-Billings; Milner)",
+                          "Guest Speaker: Dr. Chance Lewis",
+                          "Soda Can Problem: a. Solving the problem",
+                          "Soda Can Problem: b. Responding to student misconceptions",
+                          "Soda Can Problem: c. Planning a lesson",
+                          "Soda Can Problem: d. Responding to student",
+                          "Meet the Middle Grade Students in SL",
+                          "Tutoring the Middle Grade Students in SL",
+                          "Analysis of Language Moves from your tutoring",
+                          "Guest Speaker: Dr. Kathryn McKenzie",
+                          "Food Drive Problem: a. Solving the problem",
+                          "Food Drive Problem: b. Responding to student misconceptions",
+                          "Food Drive Problem: c. Planning a lesson",
+                          "Food Drive Problem: d. Responding to student questions")
+
+names(part2.Q4.char) <- c("Diversity Readings (Ladson-Billings; Milner)",
+                          "Guest Speaker: Dr. Chance Lewis",
+                          "Soda Can Problem: a. Solving the problem",
+                          "Soda Can Problem: b. Responding to student misconceptions",
+                          "Soda Can Problem: c. Planning a lesson",
+                          "Soda Can Problem: d. Responding to student",
+                          "Meet the Middle Grade Students in SL",
+                          "Tutoring the Middle Grade Students in SL",
+                          "Analysis of Language Moves from your tutoring",
+                          "Guest Speaker: Dr. Kathryn McKenzie",
+                          "Food Drive Problem: a. Solving the problem",
+                          "Food Drive Problem: b. Responding to student misconceptions",
+                          "Food Drive Problem: c. Planning a lesson",
+                          "Food Drive Problem: d. Responding to student questions")
+```
+
+Convert to Likert objects
+```{r echo=FALSE}
+part1.Q4.likert <- likert(part1.Q4.char)
+part1.Q7.likert <- likert(part1.Q7.char)
+part2.Q2.likert <- likert(part2.Q2.char)
+part2.Q4.likert <- likert(part2.Q4.char)
+```
+
+## Finally, plot the four main questions ##
+
+Part 1, Question 7 "How has each of the following activities CHANGED your AWARENESS about diversity issues?"
+```{r echo=FALSE, fig.width=10}
+plot(part1.Q7.likert, centered = FALSE, wrap = 25)
+```
+
+
+Part 1, Question 4 "How has each of the following activities CHANGED your KNOWLEDGE ABOUT TEACHING algebra diversity?"
+```{r echo=FALSE, fig.width=10}
+plot(part1.Q4.likert, centered = FALSE, wrap = 25)
+```
+
+Part 2, Question 2 "How has each of the following activities CHANGED your AWARENESS about diversity issues?"
+```{r echo=FALSE, fig.width=10}
+plot(part2.Q2.likert, centered = FALSE, wrap = 32)
+```
+
+Part 2, Question 4 "How has each of the following activities CHANGED your KNOWLEDGE ABOUT TEACHING algebra diversity?"
+```{r echo=FALSE, fig.width=10}
+plot(part2.Q4.likert, centered = FALSE, wrap = 32)
+```
+
+How about "heat" charts?
+
+Part 1, Question 7 "How has each of the following activities CHANGED your AWARENESS about diversity issues?"
+```{r echo=FALSE, fig.width=10}
+plot(part1.Q7.likert, type="heat")
+```
+
+
+Part 1, Question 4 "How has each of the following activities CHANGED your KNOWLEDGE ABOUT TEACHING algebra diversity?"
+```{r echo=FALSE, fig.width=10}
+plot(part1.Q4.likert, type="heat")
+```
+
+Part 2, Question 2 "How has each of the following activities CHANGED your AWARENESS about diversity issues?"
+```{r echo=FALSE, fig.width=10}
+plot(part2.Q2.likert, type="heat")
+```
+
+Part 2, Question 4 "How has each of the following activities CHANGED your KNOWLEDGE ABOUT TEACHING algebra diversity?"
+```{r echo=FALSE, fig.width=10}
+plot(part2.Q4.likert, type="heat")
+```

@@ -1,0 +1,401 @@
+Developing Preservice Math Teachers' Diversity Awareness and Knowledge
+======================================================================
+<!-- Here I try to recreate the data analysis that Tugba did for the RCML presentation paper.
+
+For the linear regression, the r^2 values need to be reported more clearly, as well as beta values where appropriate. It was confusing whether the authors conducted a correlational analysis (then just figured out r^2 after the fact), or if they set out to conduct a regression from the start. The nature of the study seems to be exploratory, but the authors make some efforts to provide more strong claims. I think this hurts their proposal and it would be better to describe the results a bit more honestly. If certain directional models are not yet appropriate, it does not make the findings less significant. However, the story of determining the quadratic regression can be of interest on its own. Regardless, the methods and findings need to be streamlined a bit.
+
+The author(s) did a good job with the Theoretical Framework and Methodology, however the discussion of the results seemed incomplete.
+
+I would recommend more time spent on the Discussion Section, the manuscript was left without an ending, perhaps to make the page number requirement.  Please discuss how this study will impact not only future studies but the literature as it pertains to mathematics education.
+
+GKulm: You are welcome to run the data. Tugba ran it in several ways to find significant trends or results.
+
+I suggest doing what one of the reviewers recommended: Delete Table 1, showing the CABI EFA, and simply state the results by naming the factors that were obtained. I think we can keep Table 2 since it refers to the course activities which are the main topic of the paper. That would save one whole page of 8 which could then be devoted to more attention to discussion of results. Also, just need to clarify the regression, r^2, etc. which shouldn't be too much.
+
+I think those changes are the key things to do. I would rather see you spend time on the Discussion than lots of time re-analyzing data. I know the former is more difficult to do than crunching data, but please take a stab at it. I will then work on trying to polish it.
+-->
+
+Data analysis
+-------------
+First we load the libraries:
+
+Questions: 
+(1) why only post-test for CABI (Cultural Awareness and Belief Inventory)?
+(2) why with EFA of CABI choose 4 factors?  It seems that 3 will be sufficient.
+(3) why with EFA of diversity choose 2 factors?  It seems that 3 are necessary. 
+
+```{r message=FALSE, warning=FALSE}
+library(foreign)
+library(nFactors)
+library(Hmisc)
+setwd("~/Google Drive/MASC-351/")
+```
+
+CABI post-test data
+-------------------
+First we import the SPSS file and convert to a data frame and then delete the row with NA value (rows AC1104, AC1119).  Then we remove the first column because it contains the subject IDs, i.e. not numerica data:
+```{r}
+CABI.data <- read.spss("CABIPOST.sav", to.data.frame=TRUE)
+CABI.data <- CABI.data[-c(62,77),]
+CABI.data <- subset(CABI.data, select = -SRN)
+str(CABI.data)
+```
+
+First we analyze the CABI post-test data.  We create the correlation matrix in preparation to EFA:
+```{r}
+corMat.CABI <- cor(CABI.data)
+```
+
+Then we need to find the optimal number of factors.  First we calculate the eigenvalues, and then we can plot the results:
+```{r}
+ev <- eigen(corMat.CABI)
+ap <- parallel(subject=nrow(CABI.data), var=ncol(CABI.data), rep=100, cent=0.05)
+nS <- nScree(x=ev$values, aparallel=ap$eigen$qevpea)
+plotnScree(nS)
+```
+We can also use the Kaiser rule and discard all components whose eigenvalues are below 1.0.
+```{r}
+ev$values
+```
+which would tell us to use 5 factors.
+
+We decided to use 4 factors (just past the inflection point of the graph):
+```{r}
+CABI.efa <- factanal(CABI.data, factors = 4, rotation = "varimax")
+CABI.efa
+```
+Note that the cumulative variance is 0.526 which is not that great, but not bad either.  However the chi-square statistic is highly significant (p=0.00302).  That means that we need to reject the null hypothesis that the model described by the factors predicts the data well.
+
+We performed an EFA with 5 factors as per the Kaiser rule:
+```{r}
+CABI.efa <- factanal(CABI.data, factors = 5, rotation = "varimax")
+CABI.efa
+```
+Now the statistic is not significant (p=0.0812), hence we can stop with 5 factors, even though the cumulative variance did not increase much (0.571).
+
+We called these 4 factors: "Teacher Efficacy", "Teaching beliefs", "Culture", and "Racial Beliefs".
+Maybe we can include a table where we assign each question to their factor?
+
+
+Diversity data set
+------------------
+The exploratory factor analysis of the diversity data was then performed.  We import and process the SPSS data set first:
+```{r}
+diversity.data <- read.spss("diversity1.sav", to.data.frame=TRUE)
+diversity.data <- subset(diversity.data, select = -Researchcode)
+str(diversity.data)
+corMat.diversity <- cor(diversity.data)
+```
+
+We explore the EFA of the complete "diversity" data set.
+```{r}
+ev <- eigen(corMat.diversity)
+ap <- parallel(subject=nrow(diversity.data), var=ncol(diversity.data), rep=100, cent=0.05)
+nS <- nScree(x=ev$values, aparallel=ap$eigen$qevpea)
+plotnScree(nS)
+ev$values
+```
+The plot suggests 3-4 factors and the Kaiser rule 6-7 factors.
+
+
+```{r}
+diversity.efa <- factanal(diversity.data, factors=4, rotation="varimax")
+```
+
+The EFA of the whole data set yields inconsistent results (the matrix is too close to singular).  Hence we took a subset of it pertating to the knowledge of the teaching of algebra (KTA).  The following variables were chosen:
+
+1. KTADReadingPoylatextbook
+2. KTADreadingsquestionsfromRespondingtoDiversitytbk
+3. KTADpresentationsdiscussionsaboutculturediversity
+4. KTADDiversityReadingsLadsonBillingsMilner
+5. KTADDrChanceLewis
+6. KTADHumanGraphChallenge
+7. KTADAnalysisLanguageMovesfromyourtutoring
+8. KTADDrKathrynMcKenzie
+9. KTADTheCreditCardFoodDriveChallenge
+10. KTADDinnerActivitySolvingProblem
+
+```{r}
+diversity.small <- subset(diversity.data, select = c(KTADReadingPoylatextbook,
+                                                     KTADreadingsquestionsfromRespondingtoDiversitytbk,
+                                                     KTADpresentationsdiscussionsaboutculturediversity,
+                                                     KTADDiversityReadingsLadsonBillingsMilner,
+                                                     KTADDrChanceLewis,
+                                                     KTADHumanGraphChallenge,
+                                                     KTADAnalysisLanguageMovesfromyourtutoring, 
+                                                     KTADDrKathrynMcKenzie,
+                                                     KTADTheCreditCardFoodDriveChallenge,
+                                                     KTADDinnerActivitySolvingProblem))
+str(diversity.small)
+```
+and we rerun the above factor number exploration.
+
+First we create the correlation matrix and then decide the number of factors by examining the plot of the eigenvalues and the Kaiser rule:
+```{r}
+cor(diversity.small) -> corMat.small
+ev <- eigen(corMat.small)
+ap <- parallel(subject=nrow(diversity.small), var=ncol(diversity.small), rep=100, cent=0.05)
+nS <- nScree(x=ev$values, aparallel=ap$eigen$qevpea)
+plotnScree(nS)
+ev$values
+```
+
+We can see that two or three factors are optimal.  Hence we run EFA first with 2 factors.
+```{r}
+diversity.efa <- factanal(diversity.small, factors = 2, rotation = "varimax")
+diversity.efa
+```
+The chi-square statistic shows us that two factors are enough (p=0.681).
+
+The loadings show that Factor1 explains 6 variable and Factor2 explains 4 variables.  We called Factor1 TEK and Factor2 TPSK.
+
+TEK explains: 
+KTADDiversityReadingsLadsonBillingsMilner, KTADDrChanceLewis, KTADHumanGraphChallenge, KTADAnalysisLanguageMovesfromyourtutoring,  KTADDrKathrynMcKenzie, and KTADTheCreditCardFoodDriveChallenge.
+
+TPSK explains:
+KTADReadingPoylatextbook, KTADreadingsquestionsfromRespondingtoDiversitytbk, KTADpresentationsdiscussionsaboutculturediversity, and KTADDinnerActivitySolvingProblem.
+
+
+KATE data set
+-------------
+First we import the SPSS KATE data set:
+```{r}
+KATE.data <- read.spss("KATEtest.sav", to.data.frame=TRUE)
+KATE.data <- subset(KATE.data, select = -SRN)
+str(KATE.data)
+corMat.KATE <- cor(KATE.data)
+```
+
+The correlation matrix is not valid because there are variables (columns) that are uniform.  At this point we have decided to postpone the analysis of this data set.
+
+
+RCML data set
+-------------
+First we import the SPSS RCML data set:
+```{r}
+RCML.data <- read.spss("spssdataRCML.sav", to.data.frame=TRUE)
+RCML.data <- subset(RCML.data, select = -Researchcode)
+str(RCML.data)
+corMat.RCML <- cor(RCML.data)
+```
+
+Again, we have zero standard deviation.  We decided to use as predictors TPSK and TEK from the diveristy data set analysis and as response variables the last 6 variables of the data set.  TPSK and TEK were built by averaging their component variables.
+
+```{r}
+attach(diversity.data)
+TEK.tmp <- data.frame(KTADDiversityReadingsLadsonBillingsMilner, 
+                      KTADDrChanceLewis, 
+                      KTADHumanGraphChallenge, 
+                      KTADAnalysisLanguageMovesfromyourtutoring, 
+                      KTADDrKathrynMcKenzie, 
+                      KTADTheCreditCardFoodDriveChallenge)
+
+TPSK.tmp <- data.frame(KTADReadingPoylatextbook, 
+                       KTADreadingsquestionsfromRespondingtoDiversitytbk, 
+                       KTADpresentationsdiscussionsaboutculturediversity,
+                       KTADDinnerActivitySolvingProblem)
+detach(diversity.data)
+TEK <- rowMeans(TEK.tmp)
+TPSK <- rowMeans(TPSK.tmp)
+rm(TEK.tmp, TPSK.tmp)
+```
+
+First we calculate a correlation table for the relevant variables in the RCML data set plus the TEK and TPSK variables:
+```{r}
+multivariate.data <- data.frame(RCML.data$F1c, 
+                                RCML.data$F2CA, 
+                                RCML.data$F3c,
+                                RCML.data$F4c, 
+                                RCML.data$MKATE, 
+                                RCML.data$TKATE,
+                                TEK,
+                                TPSK)
+cor(multivariate.data)
+```
+
+Then we run regressions with TEK and TPSK as predictors and F1c, F2CA, F3c, F4c, MKATE, TKATE as outcome variables.
+
+```{r}
+lm(TPSK ~ F1c + F2CA + F3c + F4c + MKATE + TKATE, data=RCML.data) -> fit.TPSK
+summary(fit.TPSK)
+lm(TEK ~ F1c + F2CA + F3c + F4c + MKATE + TKATE, data=RCML.data) -> fit.TEK
+summary(fit.TEK)
+```
+Obviously a linear regression is not appropriate as can also be seen from the scatterplot matrix:
+```{r fig.width=12, fig.height=10}
+pairs(multivariate.data)
+```
+
+Spearman rank correlation coefficient
+-------------------------------------
+
+There is a problem with treating Likert data as interval data.  Maybe we should treat it as ordinal data and analyze it using the Kruskal-Wallis one-way analysis of variance (wilcox.test).  However, first we start with finding Spearman rhos for the CABI data set and associated probability values:
+```{r}
+corCABI <- cor(CABI.data, method="spearman")
+rcorr(as.matrix(CABI.data), type="spearman")
+```
+However, such a large amount of data is better visualized as a heat map:
+```{r fig.height=10, fig.width=12}
+cor.plot(corCABI, main="CABI data set")
+```
+
+Same for the Diversity data set.  First the Spearman correlation coefficients with associated probability values:
+```{r}
+corDiversity <- cor(diversity.data, method="spearman")
+rcorr(as.matrix(diversity.data), type="spearman")
+```
+with the corresponding heat map:
+```{r fig.height=10, fig.width=12}
+cor.plot(corDiversity, main="Diversity data set")
+```
+which actually shows strong correlation between the first group of variables and between the first and last variables.  In addition there is some correlation between the middle variables.
+
+Then we analyze the KATE data set.  First the Spearman correlation coefficients with associated probability values:
+```{r}
+corKATE <- cor(KATE.data, method="spearman")
+rcorr(as.matrix(KATE.data), type="spearman")
+```
+and the correlation heat map:
+```{r fig.height=10, fig.width=12}
+cor.plot(corKATE, main="KATE data set")
+```
+Many of the columns are secondary and should be removed from the analysis.
+
+Finally the RCM data set. First the Spearman correlation coefficients with associated probability values:
+```{r}
+corRCML <- cor(RCML.data, method="spearman")
+rcorr(as.matrix(RCML.data), type="spearman")
+```
+and the correlation heat map:
+```{r fig.height=10, fig.width=12}
+cor.plot(corRCML, main="RCML data set")
+```
+which shows some correlations.
+
+I suggest to, instead of averaging the data that is ordinal, and combine the related variables by merging the records and thus keeping them as ordinal data. 
+
+
+Slightly different code here below
+----------------------------------
+Data analysis
+-------------
+First we load the libraries and import the 4 data sets:
+
+Questions: 
+(1) why only post-test for CABI (Cultural Awareness and Belief Inventory)?
+(2) why with EFA of CABI choose 4 factors?  It seems that 3 will be sufficient.
+(3) why with EFA of diversity choose 2 factors?  It seems that 3 are necessary. 
+
+```{r}
+library(psych)
+library(nFactors)
+setwd("~/Google Drive/MASC-351/")
+#
+read.csv('CABIPOST.csv', header=TRUE)     -> cabipost.tmp
+read.csv('diversity.csv', header=TRUE)    -> diversity.tmp
+read.csv('KATEtest.csv', header=TRUE)     -> KATE.test.tmp
+read.csv('spssdataRCML.csv', header=TRUE) -> RCML.data.tmp
+```
+
+We need to remove the first column because it is non numeric.
+```{r}
+subset(cabipost.tmp, select = -SRN)            -> CABI.post.data
+subset(diversity.tmp, select = -Researchcode)  -> diversity.data
+subset(KATE.test.tmp, select = -SRN)           -> KATE.data
+subset(RCML.data.tmp, select = -Researchcode)  -> RCML.data
+rm(cabipost.tmp, diversity1.tmp, KATE.test.tmp, RCML.data.tmp)
+```
+
+Then we look at the structure of these data sets:
+```{r}
+str(CABI.post.data)
+str(diversity.data)
+str(KATE.data)
+str(RCML.data)
+```
+
+Beliefs Inventory
+-----------------
+First we analyze the CABI post-test data.  We create the correlation matrix and then perform EFA:
+```{r}
+corMat.CABI <- cor(CABI.post.data, use = "na.or.complete")
+```
+Then we need to find the optimal number of factors.  First we calculate the eigenvalues, and then we can plot the results:
+```{r}
+ev <- eigen(corMat.CABI)
+ap <- parallel(subject=nrow(CABI.post.data), var=ncol(CABI.post.data), rep=100, cent=0.05)
+nS <- nScree(x=ev$values, aparallel=ap$eigen$qevpea)
+plotnScree(nS)
+```
+
+Hence we decide to use 4 factors (the inflection point of the graph):
+```{r}
+CABI.efa <- fa(r = corMat.CABI, nfactors = 4, rotate = "varimax", fm = "pa")
+CABI.efa
+```
+
+We call these 4 factors: "Teacher Efficacy", "Teaching beliefs", "Culture", and "Racial Beliefs".
+Maybe we can include a table where we assign each question to their factor?
+
+
+Diversity
+---------
+The exploratory factor analysis of the diversity data was then performed.  First we create the correlation matrix and then decide the number of factors by examining the plot of the eigenvalues:
+```{r}
+cor(diversity.data, use = "na.or.complete") -> corMat.diversity
+ev <- eigen(corMat.diversity)
+ap <- parallel(subject=nrow(diversity.data), var=ncol(diversity.data), rep=100, cent=0.05)
+nS <- nScree(x=ev$values, aparallel=ap$eigen$qevpea)
+plotnScree(nS)
+```
+
+We can see that three factors are optimal.  Hence we run EFA with 3 factors.
+```{r}
+CABI.efa.3 <- fa(r = corMat.diversity, nfactors = 3, rotate = "varimax", fm = "pa")
+CABI.efa.3
+```
+
+We see that the diversity data can not be analyzed this way. We tried several combinations of variables and we obtained the following subset of TKA variables:
+KTADReadingPoylatextbook
+KTADreadingsquestionsfromRespondingtoDiversitytbk
+KTADpresentationsdiscussionsaboutculturediversity
+KTADDiversityReadingsLadsonBillingsMilner
+KTADDrChanceLewis
+KTADHumanGraphChallenge
+KTADAnalysisLanguageMovesfromyourtutoring
+KTADDrKathrynMcKenzie
+KTADTheCreditCardFoodDriveChallenge
+KTADDinnerActivitySolvingProblem
+
+```{r}
+diversity.small <- subset(diversity.data, select = c(KTADReadingPoylatextbook,
+                                                     KTADreadingsquestionsfromRespondingtoDiversitytbk,
+                                                     KTADpresentationsdiscussionsaboutculturediversity,
+                                                     KTADDiversityReadingsLadsonBillingsMilner,
+                                                     KTADDrChanceLewis,
+                                                     KTADHumanGraphChallenge,
+                                                     KTADAnalysisLanguageMovesfromyourtutoring, 
+                                                     KTADDrKathrynMcKenzie,
+                                                     KTADTheCreditCardFoodDriveChallenge,
+                                                     KTADDinnerActivitySolvingProblem))
+str(diversity.small)
+```
+
+Now we explore again the optimal number of factors:
+```{r}
+cor(diversity.small, use = "na.or.complete") -> corMat.diversity.small
+ev <- eigen(corMat.diversity.small)
+ap <- parallel(subject=nrow(diversity.small), var=ncol(diversity.small), rep=100, cent=0.05)
+nS <- nScree(x=ev$values, aparallel=ap$eigen$qevpea)
+plotnScree(nS)
+```
+
+We can see from the plot that the optimal number of factors is 3.  However, for theoretical reasons we will also run the EFA with 2 factors:
+```{r}
+CABI.efa.3 <- fa(r = corMat.diversity.small, nfactors = 3, rotate = "varimax", fm = "pa")
+CABI.efa.3
+CABI.efa.2 <- fa(r = corMat.diversity.small, nfactors = 2, rotate = "varimax", fm = "pa")
+CABI.efa.2
+```
+
+The 2 EFA analyses show that the best number of factors is two.

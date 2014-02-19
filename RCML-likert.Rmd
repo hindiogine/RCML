@@ -1,0 +1,149 @@
+Developing Preservice Math Teachers' Diversity Awareness and Knowledge
+======================================================================
+<!-- Non-parametric analysis
+
+For the linear regression, the r^2 values need to be reported more clearly, as well as beta values where appropriate. It was confusing whether the authors conducted a correlational analysis (then just figured out r^2 after the fact), or if they set out to conduct a regression from the start. The nature of the study seems to be exploratory, but the authors make some efforts to provide more strong claims. I think this hurts their proposal and it would be better to describe the results a bit more honestly. If certain directional models are not yet appropriate, it does not make the findings less significant. However, the story of determining the quadratic regression can be of interest on its own. Regardless, the methods and findings need to be streamlined a bit.
+
+The author(s) did a good job with the Theoretical Framework and Methodology, however the discussion of the results seemed incomplete.
+
+I would recommend more time spent on the Discussion Section, the manuscript was left without an ending, perhaps to make the page number requirement.  Please discuss how this study will impact not only future studies but the literature as it pertains to mathematics education.
+
+GKulm: You are welcome to run the data. Tugba ran it in several ways to find significant trends or results.
+
+I suggest doing what one of the reviewers recommended: Delete Table 1, showing the CABI EFA, and simply state the results by naming the factors that were obtained. I think we can keep Table 2 since it refers to the course activities which are the main topic of the paper. That would save one whole page of 8 which could then be devoted to more attention to discussion of results. Also, just need to clarify the regression, r^2, etc. which shouldn't be too much.
+
+I think those changes are the key things to do. I would rather see you spend time on the Discussion than lots of time re-analyzing data. I know the former is more difficult to do than crunching data, but please take a stab at it. I will then work on trying to polish it.
+-->
+
+Data analysis
+-------------
+First we load the libraries:
+
+Questions: why only post-test for CABI (Cultural Awareness and Belief Inventory)?
+
+```{r message=FALSE, warning=FALSE}
+library(foreign)
+library(nFactors)
+library(Hmisc)
+setwd("~/Google Drive/MASC-351/") # data directory
+```
+
+CABI post-test data
+-------------------
+First we import the SPSS file and convert to a data frame and then delete the row with NA value (rows AC1104, AC1119).  Then we remove the first column because it contains the subject IDs, i.e. not numerica data:
+```{r}
+CABI.data <- read.spss("CABIPOST.sav", to.data.frame = TRUE)
+CABI.data <- CABI.data[-c(62,77),]
+CABI.data <- subset(CABI.data, select = -SRN)
+str(CABI.data)
+```
+
+First we perform the Kruskal-Wallis Rank Sum test.  This is a non-parametric test to find out whether all the variables belogn to the same distribution.
+```{r}
+kruskal.test(CABI.data)
+```
+We see that the variables in the CABI data set belogn to different populations.
+
+The we find Spearman rhos for the CABI data set and associated probability values:
+```{r}
+corCABI <- cor(CABI.data, method = "spearman")
+# rcorr(as.matrix(CABI.data), type = "spearman")
+```
+However, such a large amount of data is better visualized as a heat map.  In addition because it is a symmetric matrix only the lower matrix is necessary:
+```{r fig.height=10, fig.width=12}
+corCABI[upper.tri(corCABI)] <- NA
+cor.plot(corCABI, main = "CABI data set")
+```
+
+We see that we can group the following variables:
+
+Q6, Q7, Q8, Q9, Q12, Q13, Q14, Q15, Q16, Q17, Q19.
+
+
+Diversity data set
+------------------
+The exploratory factor analysis of the diversity data was then performed.  We import and process the SPSS data set first:
+```{r}
+diversity.data <- read.spss("diversity1.sav", to.data.frame=TRUE)
+diversity.data <- subset(diversity.data, select = -c(Researchcode,DIAdinner,KTADdinner))
+str(diversity.data)
+```
+
+First we perform the Kruskal-Wallis Rank Sum test.  This is a non-parametric test to find out whether all the variables belogn to the same distribution.
+```{r}
+kruskal.test(diversity.data)
+```
+We see that the variables in the Diversity data set belogn to different populations.
+
+The we find Spearman rhos for the CABI data set and associated probability values:
+```{r}
+corDiversity <- cor(diversity.data, method = "spearman")
+# rcorr(as.matrix(diversity.data), type = "spearman")
+```
+However, such a large amount of data is better visualized as a heat map.  In addition because it is a symmetric matrix only the lower matrix is necessary:
+```{r fig.height=10, fig.width=12}
+corDiversity[upper.tri(corDiversity)] <- NA
+cor.plot(corDiversity, main = "Diversity data set")
+```
+
+From the correlation plot we can detect variable groupings of the Diversity data set.
+
+
+KATE data set
+-------------
+First we import the SPSS KATE data set:
+```{r}
+KATE.data <- read.spss("KATEtest.sav", to.data.frame=TRUE)
+KATE.data <- subset(KATE.data, select = c(Sex,Class,CertLevel,Hispanic,Race,GainP1,GainP2,GainP3,GainP4,GainP5,GainP6,GainP7,GainP8,GainP9,
+                                          GainP10,GainP11,GainP12,GainP13,GainP14,GainP15,GainP16MathUnderstanding,GainP16ProblemSolving,
+                                          GainP16Clarity,GainP16Completeness,GainP16total,TotalGain))
+str(KATE.data)
+```
+
+Kruskal-Wallis Rank Sum test
+```{r}
+kruskal.test(KATE.data)
+```
+As expected, the variables belogn to different distributions.
+
+The we find Spearman rhos for the CABI data set and associated probability values:
+```{r}
+corKATE <- cor(KATE.data, method = "spearman")
+# rcorr(as.matrix(KATE.data), type = "spearman")
+```
+However, such a large amount of data is better visualized as a heat map.  In addition because it is a symmetric matrix only the lower matrix is necessary:
+```{r fig.height=10, fig.width=12}
+corKATE[upper.tri(corKATE)] <- NA
+cor.plot(corKATE, main = "KATE data set")
+```
+
+We see that the P16 variables are correlated, as expected.
+
+
+
+RCML data set
+-------------
+First we import the SPSS RCML data set:
+```{r}
+RCML.data <- read.spss("spssdataRCML.sav", to.data.frame=TRUE)
+RCML.data <- subset(RCML.data, select = -c(Researchcode,PosttestP16total,F1c,F2CA,F3c,F4c,MKATE,TKATE))
+str(RCML.data)
+```
+
+Kruskal-Wallis Rank Sum test
+```{r}
+kruskal.test(RCML.data)
+```
+As expected, the variables belogn to different distributions.
+
+The we find Spearman rhos for the CABI data set and associated probability values:
+```{r}
+corRCML <- cor(RCML.data, method = "spearman")
+# rcorr(as.matrix(RCML.data), type = "spearman")
+```
+However, such a large amount of data is better visualized as a heat map.  In addition because it is a symmetric matrix only the lower matrix is necessary:
+```{r fig.height=10, fig.width=12}
+corRCML[upper.tri(corRCML)] <- NA
+cor.plot(corRCML, main = "RCML data set")
+```
+We can see some clustering of variables.

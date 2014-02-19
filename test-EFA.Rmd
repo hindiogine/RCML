@@ -1,0 +1,28 @@
+R Tutorial Series: Exploratory Factor Analysis
+==============================================
+
+To begin, we need to read our datasets into R and store their contents in variables.
+
+```{r}
+library(psych)
+setwd("~/Downloads/")
+read.csv("dataset_EFA.csv") -> data
+str(data)
+head(data)
+```
+First find the correlation matrix
+
+```{r}
+cor(data) -> corMat
+corMat
+```
+
+Use fa() to conduct an oblique principal-axis exploratory factor analysis.  Then, save the solution to an R variable and display the solution output.
+
+```{r}
+solution <- fa(r = corMat, nfactors = 2, rotate = "oblimin", fm = "pa")
+solution
+```
+By looking at our factor loadings, we can begin to assess our factor solution. We can see that BIO, GEO, and CHEM all have high factor loadings around 0.8 on the first factor (PA1). Therefore, we might call this factor Science and consider it representative of a student's interest in science subject matter. Similarly, ALG, CALC, and STAT load highly on the second factor (PA2), which we might call Math. Note that STAT has a much lower loading on PA2 than ALG or CALC and that it has a slight loading on factor PA1. This suggests that statistics is less related to the concept of Math than algebra and calculus. Just below the loadings table, we can see that each factor accounted for around 30% of the variance in responses, leading to a factor solution that accounted for 66% of the total variance in students' subject matter preference. Lastly, notice that our factors are correlated at 0.21 and recall that our choice of oblique rotation allowed for the recognition of this relationship. 
+
+http://rtutorialseries.blogspot.com/2011/10/r-tutorial-series-exploratory-factor.html
