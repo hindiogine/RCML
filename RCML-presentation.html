@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>RCML Presentation </title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+</head>
+
+<body>
+<h1>RCML Presentation </h1>
+
+<p>Initial settings, libraries and cleanup.</p>
+
+<pre><code class="r">rm(list = ls())
+library(foreign)
+library(likert)
+library(xtable)
+setwd(&quot;~/Google Drive/MASC-351/&quot;)
+</code></pre>
+
+<h2>Cultural Awareness Beliefs Inventory</h2>
+
+<p>First we load the CABI data.  CABI = cultural awareness beliefs inventory.  20 multiple choice survey questions with values: &ldquo;Strongly agree&rdquo; (1), &ldquo;Agree&rdquo; (2), &ldquo;Disagree&rdquo; (3), and &ldquo;Strongly disagree&rdquo; (4). These were asked at the end of each semester.</p>
+
+<pre><code class="r">CABI.data &lt;- read.spss(&quot;CABIPOST.sav&quot;, to.data.frame = TRUE)
+</code></pre>
+
+<pre><code>## Error: unable to open file: &#39;No such file or directory&#39;
+</code></pre>
+
+<pre><code class="r">CABI.data &lt;- CABI.data[-c(62, 77), ]
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI.data&#39; not found
+</code></pre>
+
+<pre><code class="r">CABI.data &lt;- subset(CABI.data, select = -SRN)
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI.data&#39; not found
+</code></pre>
+
+<p>Format the data and create the Likert object.</p>
+
+<pre><code class="r">CABI.tmp &lt;- lapply(CABI.data, factor, levels = 1:4, labels = c(&quot;Strongly disagree&quot;, 
+    &quot;Disagree&quot;, &quot;Agree&quot;, &quot;Strongly agree&quot;))
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI.data&#39; not found
+</code></pre>
+
+<pre><code class="r">CABI &lt;- data.frame(CABI.tmp)
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI.tmp&#39; not found
+</code></pre>
+
+<pre><code class="r">questions &lt;- c(&quot;Q1&quot;, &quot;Q2&quot;, &quot;Q3&quot;, &quot;Q4&quot;, &quot;Q5&quot;, &quot;Q6&quot;, &quot;Q7&quot;, &quot;Q8&quot;, &quot;Q9&quot;, &quot;Q10&quot;, 
+    &quot;Q11&quot;, &quot;Q12&quot;, &quot;Q13&quot;, &quot;Q14&quot;, &quot;Q15&quot;, &quot;Q16&quot;, &quot;Q17&quot;, &quot;Q18&quot;, &quot;Q19&quot;, &quot;Q20&quot;)
+names(CABI) &lt;- questions
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI&#39; not found
+</code></pre>
+
+<pre><code class="r">CABI.likert &lt;- likert(CABI)
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI&#39; not found
+</code></pre>
+
+<pre><code class="r">plot(CABI.likert) + labs(title = &quot;CABI&quot;)
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI.likert&#39; not found
+</code></pre>
+
+<p>List of 20 multiple choice CABI questions:</p>
+
+<TABLE border=0>
+<TR><TD>Q1</TD><TD>I believe all middle school students are treated equitably regardless of their race, culture, disability, gender or social economic status.</TD></TR>
+<TR><TD>Q2</TD><TD>I believe all families are supportive of teachers’ work to effectively teach all middle school students.</TD></TR>
+<TR><TD>Q3</TD><TD>I believe teachers have strong support for academic excellence from the surrounding school community (civic, church, business).</TD></TR>
+<TR><TD>Q4</TD><TD>I believe some students do not want to learn</TD></TR>
+<TR><TD>Q5</TD><TD>I believe that poor teaching is the main factor that causes the gap in math achievement between White students and students of color.</TD></TR>
+<TR><TD>Q6</TD><TD>I believe I have the knowledge and skills I need to be a culturally responsive math teacher.</TD></TR>
+<TR><TD>Q7</TD><TD>I believe I can implement cooperative learning effectively as an integral part of my math teaching strategies.</TD></TR>
+<TR><TD>Q8</TD><TD>I believe African American students have more behavior problems than other students.</TD></TR>
+<TR><TD>Q9</TD><TD>I believe most diverse students are not as eager to excel in math in comparison to their White peers.</TD></TR>
+<TR><TD>Q10</TD><TD>I believe many middle school teachers engage in biased behavior toward students of color in the classroom.</TD></TR>
+<TR><TD>Q11</TD><TD>I believe students who live in poverty are more difficult to teach.</TD></TR>
+<TR><TD>Q12</TD><TD>I believe most diverse students do not bring as many strengths to the classroom as their White peers.</TD></TR>
+<TR><TD>Q13</TD><TD>I believe it is important to identify with the racial groups of the students I serve.</TD></TR>
+<TR><TD>Q14</TD><TD>I believe I am comfortable with people who exhibit values or beliefs different from my own.</TD></TR>
+<TR><TD>Q15</TD><TD>I believe the cultural views of a diverse school community should be an integral component of my lesson planning.</TD></TR>
+<TR><TD>Q16</TD><TD>I believe in asking families of diverse cultures how they wish to be identified (e.g., African American, Bi-racial, Mexican).</TD></TR>
+<TR><TD>Q17</TD><TD>I believe that in a society with as many racial groups as the United States, I would accept the use of ethnic jokes or phrases by students.</TD></TR>
+<TR><TD>Q18</TD><TD>I believe math classroom activities should enhance English Language Learners’ understanding.</TD></TR>
+<TR><TD>Q19</TD><TD>I believe I am able to effectively manage students from all racial groups.</TD></TR>
+<TR><TD>Q20</TD><TD>I believe I would prefer to work with students and parents whose cultures are similar to mine.</TD></TR>
+</TABLE>
+
+<p>We display the Likert data as plots according to EFA groupings: &ldquo;Teacher efficacy&rdquo; (TE), &ldquo;Teacher beliefs&rdquo; (TB), &ldquo;Cultural beliefs&rdquo; (CB), and &ldquo;Racial beliefs&rdquo; (RB).</p>
+
+<pre><code class="r">attach(CABI)
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI&#39; not found
+</code></pre>
+
+<pre><code class="r">CABI.TE &lt;- data.frame(Q6, Q7, Q8, Q9, Q12, Q13, Q14, Q15, Q16, Q17, Q18, Q19)
+</code></pre>
+
+<pre><code>## Error: object &#39;Q6&#39; not found
+</code></pre>
+
+<pre><code class="r">CABI.TE.likert &lt;- likert(CABI.TE)
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI.TE&#39; not found
+</code></pre>
+
+<pre><code class="r">
+CABI.TB &lt;- data.frame(Q2, Q3, Q4, Q5)
+</code></pre>
+
+<pre><code>## Error: object &#39;Q2&#39; not found
+</code></pre>
+
+<pre><code class="r">CABI.TB.likert &lt;- likert(CABI.TB)
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI.TB&#39; not found
+</code></pre>
+
+<pre><code class="r">
+CABI.CB &lt;- data.frame(Q11, Q18, Q20)
+</code></pre>
+
+<pre><code>## Error: object &#39;Q11&#39; not found
+</code></pre>
+
+<pre><code class="r">CABI.CB.likert &lt;- likert(CABI.CB)
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI.CB&#39; not found
+</code></pre>
+
+<pre><code class="r">
+CABI.RB &lt;- data.frame(Q1, Q19)
+</code></pre>
+
+<pre><code>## Error: object &#39;Q1&#39; not found
+</code></pre>
+
+<pre><code class="r">CABI.RB.likert &lt;- likert(CABI.RB)
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI.RB&#39; not found
+</code></pre>
+
+<pre><code class="r">detach(CABI)
+</code></pre>
+
+<pre><code>## Error: invalid &#39;name&#39; argument
+</code></pre>
+
+<pre><code class="r">plot(CABI.TE.likert) + labs(title = &quot;CABI - Teacher efficacy&quot;)
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI.TE.likert&#39; not found
+</code></pre>
+
+<pre><code class="r">plot(CABI.TB.likert) + labs(title = &quot;CABI - Teacher beliefs&quot;)
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI.TB.likert&#39; not found
+</code></pre>
+
+<pre><code class="r">plot(CABI.CB.likert) + labs(title = &quot;CABI - Cultural beliefs&quot;)
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI.CB.likert&#39; not found
+</code></pre>
+
+<pre><code class="r">plot(CABI.RB.likert) + labs(title = &quot;CABI - Racial beliefs&quot;)
+</code></pre>
+
+<pre><code>## Error: object &#39;CABI.RB.likert&#39; not found
+</code></pre>
+
+<h2>Diversity Preparedness Response Inventory</h2>
+
+<p>First we import and process the SPSS data set first:</p>
+
+<pre><code class="r">DPRI.data &lt;- read.spss(&quot;diversity1.sav&quot;, to.data.frame = TRUE)
+</code></pre>
+
+<pre><code>## Error: unable to open file: &#39;No such file or directory&#39;
+</code></pre>
+
+<pre><code class="r">DPRI.data &lt;- subset(DPRI.data, select = -c(Researchcode, DIAdinner, KTADdinner))
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI.data&#39; not found
+</code></pre>
+
+<p>There are 32 questions, which are too many to display conveniently on a single plot. Hence we split it into the KTAD (knowledge for teaching algebra for diversity) and DIA (diversity awareness).  The following table shows the activities with the label used in the graphs to identify them</p>
+
+<TABLE border=0>
+<TR><TD> DIA-1   </TD><TD> DIAReadingPoylatextbook</TD></TR>
+<TR><TD> DIA-2   </TD><TD> DIAreadingsquestionsfromRespondingtoDiversitytbk</TD></TR>
+<TR><TD> DIA-3   </TD><TD> DIApresentationsdiscussionsaboutculturediversity</TD></TR>
+<TR><TD> DIA-4   </TD><TD> DIADinnerActivitySolvingProblem </TD></TR>   
+<TR><TD> KTAD-1  </TD><TD> KTADReadingPoylatextbook </TD></TR>
+<TR><TD> KTAD-2  </TD><TD> KTADreadingsquestionsfromRespondingtoDiversitytbk </TD></TR>
+<TR><TD> KTAD-3  </TD><TD> KTADpresentationsdiscussionsaboutculturediversity </TD></TR>
+<TR><TD> KTAD-4  </TD><TD> KTADDinnerActivitySolvingProblem </TD></TR>               
+<TR><TD> DIA-5   </TD><TD> DIADiversityReadingsLadsonBillingsMilner </TD></TR>         
+<TR><TD> DIA-6   </TD><TD> DIADrChanceLewis                   </TD></TR>
+<TR><TD> DIA-7   </TD><TD> DIAHumanGraphChallenge           </TD></TR>         
+<TR><TD> DIA-8   </TD><TD> DIAMeettheMiddleGradeStudentsinSL</TD></TR>                
+<TR><TD> DIA-9   </TD><TD> DIATutoringtheMiddleGradeStudentsinSL</TD></TR>     
+<TR><TD> DIA-10  </TD><TD> DIAAnalysisLanguageMovesfromyourtutoring   </TD></TR>    
+<TR><TD> DIA-11  </TD><TD> DIADrKathrynMcKenzie                     </TD></TR>     
+<TR><TD> DIA-12  </TD><TD> DIATheCreditCardFoodDriveChallenge       </TD></TR> 
+<TR><TD> KTAD-5  </TD><TD> KTADDiversityReadingsLadsonBillingsMilner</TD></TR>      
+<TR><TD> KTAD-6  </TD><TD> KTADDrChanceLewis                      </TD></TR>       
+<TR><TD> KTAD-7  </TD><TD> KTADHumanGraphChallenge          </TD></TR> 
+<TR><TD> KTAD-8  </TD><TD> KTADMeettheMiddleGradeStudentsinSL     </TD></TR>   
+<TR><TD> KTAD-9  </TD><TD> KTADTutoringtheMiddleGradeStudentsinSL</TD></TR>           
+<TR><TD> KTAD-10 </TD><TD> KTADAnalysisLanguageMovesfromyourtutoring</TD></TR> 
+<TR><TD> KTAD-11 </TD><TD> KTADDrKathrynMcKenzie                  </TD></TR>  
+<TR><TD> KTAD-12 </TD><TD> KTADTheCreditCardFoodDriveChallenge  </TD></TR>            
+<TR><TD> DIA-13  </TD><TD> DIAProblemsolvinglessonPresentationinSL</TD></TR>        
+<TR><TD> KTAD-14 </TD><TD> KTADProblemsolvinglessonPresentationinSL</TD></TR>        
+<TR><TD> DIA-14  </TD><TD> DIADinnerProblemRespondingtostudentmisconceptions </TD></TR>
+<TR><TD> DIA-15  </TD><TD> DIADinnerProblemPlanningalesson    </TD></TR>      
+<TR><TD> DIA-16  </TD><TD> DIADinnerProblemRespondingtostudentquestions</TD></TR>
+<TR><TD> KTAD-18 </TD><TD> KTADDinnerProblemRespondingtostudentmisconceptions</TD></TR>
+<TR><TD> KTAD-19 </TD><TD> KTADinnerProblemPlanningalesson</TD></TR>  
+<TR><TD> KTAD-20 </TD><TD> KTADDinnerProblemRespondingtostudentquestions</TD></TR>
+</TABLE>
+
+<p>[NOTE: we state in this presentation that we do not show the SecLife data.  However, we have SL items in this data set.]</p>
+
+<p>First we format the data and create the Likert object.</p>
+
+<pre><code class="r">DPRI.tmp &lt;- lapply(DPRI.data, factor, levels = 1:4, labels = c(&quot;No change&quot;, 
+    &quot;Made me rethink&quot;, &quot;Changed somewhat&quot;, &quot;Changed a lot&quot;))
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI.data&#39; not found
+</code></pre>
+
+<pre><code class="r">DPRI &lt;- data.frame(DPRI.tmp)
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI.tmp&#39; not found
+</code></pre>
+
+<pre><code class="r">questions &lt;- c(&quot;DIA.1&quot;, &quot;DIA.2&quot;, &quot;DIA.3&quot;, &quot;DIA.4&quot;, &quot;KTAD.1&quot;, &quot;KTAD.2&quot;, &quot;KTAD.3&quot;, 
+    &quot;KTAD.4&quot;, &quot;DIA.5&quot;, &quot;DIA.6&quot;, &quot;DIA.7&quot;, &quot;DIA.8&quot;, &quot;DIA.9&quot;, &quot;DIA.10&quot;, &quot;DIA.11&quot;, 
+    &quot;DIA.12&quot;, &quot;KTAD.5&quot;, &quot;KTAD.6&quot;, &quot;KTAD.7&quot;, &quot;KTAD.8&quot;, &quot;KTAD.9&quot;, &quot;KTAD.10&quot;, &quot;KTAD.11&quot;, 
+    &quot;KTAD.12&quot;, &quot;DIA.13&quot;, &quot;KTAD.14&quot;, &quot;DIA.15&quot;, &quot;DIA.16&quot;, &quot;DIA.17&quot;, &quot;KTAD.18&quot;, 
+    &quot;KTAD.19&quot;, &quot;KTAD.20&quot;)
+names(DPRI) &lt;- questions
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI&#39; not found
+</code></pre>
+
+<pre><code class="r">DPRI.likert &lt;- likert(DPRI)
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI&#39; not found
+</code></pre>
+
+<p>The we split the DPRI data into ints DIA and TKAD components.</p>
+
+<pre><code class="r">attach(DPRI)
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI&#39; not found
+</code></pre>
+
+<pre><code class="r">DPRI.DIA.tmp &lt;- DPRI[, c(1, 2, 3, 4, 9, 10, 11, 12, 13, 14, 15, 16, 25, 27, 
+    28, 29)]
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI&#39; not found
+</code></pre>
+
+<pre><code class="r">DPRI.KTAD.tmp &lt;- DPRI[, c(5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, 24, 26, 30, 
+    31, 32)]
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI&#39; not found
+</code></pre>
+
+<pre><code class="r">detach(DPRI)
+</code></pre>
+
+<pre><code>## Error: invalid &#39;name&#39; argument
+</code></pre>
+
+<pre><code class="r">DPRI.DIA &lt;- data.frame(DPRI.DIA.tmp)
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI.DIA.tmp&#39; not found
+</code></pre>
+
+<pre><code class="r">DPRI.KTAD &lt;- data.frame(DPRI.KTAD.tmp)
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI.KTAD.tmp&#39; not found
+</code></pre>
+
+<pre><code class="r">DPRI.DIA.likert &lt;- likert(DPRI.DIA)
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI.DIA&#39; not found
+</code></pre>
+
+<pre><code class="r">DPRI.KTAD.likert &lt;- likert(DPRI.KTAD)
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI.KTAD&#39; not found
+</code></pre>
+
+<pre><code class="r">plot(DPRI.DIA.likert, wrap = 18, center = 1.5) + labs(title = &quot;DPRI - DIA&quot;)
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI.DIA.likert&#39; not found
+</code></pre>
+
+<pre><code class="r">plot(DPRI.KTAD.likert, wrap = 18, center = 1.5) + labs(title = &quot;DPRI - KTAD&quot;)
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI.KTAD.likert&#39; not found
+</code></pre>
+
+<h2>Linear models of EFA factors</h2>
+
+<p>The following table shows our predictor and outcome variables:</p>
+
+<table border=0>
+<tr><td>Predictor variable</td><td>Outcome variable</td><td>p value</td><td>Effect size (R^2)</td></tr>
+<tr><td>TEK</td><td>Math</td><td>0.007</td><td>0.167</td></tr>
+<tr><td>TEK</td><td>Teaching efficacy</td><td>0.006</td><td>0.170</td></tr>
+<tr><td>TEK</td><td>Teaching beliefs</td><td>0.001</td><td>0.224</td></tr>
+<tr><td>TPSK</td><td>Teaching beliefs</td><td>0.027</td><td>0.125</td></tr>
+</table>
+
+<p>We load the data used to calculate the models</p>
+
+<pre><code class="r">RCML.data &lt;- read.spss(&quot;spssdataRCML.sav&quot;, to.data.frame = TRUE)
+</code></pre>
+
+<pre><code>## Error: unable to open file: &#39;No such file or directory&#39;
+</code></pre>
+
+<p>First we create the TPSK and TEK variables from the DPRI data.</p>
+
+<pre><code class="r">names(DPRI.data) &lt;- questions
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI.data&#39; not found
+</code></pre>
+
+<pre><code class="r">TPSK &lt;- data.frame(TKAD.1 = DPRI.data$KTAD.1, TKAD.2 = DPRI.data$KTAD.2, TKAD.3 = DPRI.data$KTAD.3, 
+    TKAD.4 = DPRI.data$KTAD.4)
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI.data&#39; not found
+</code></pre>
+
+<pre><code class="r">
+TEK &lt;- data.frame(KTAD.5 = DPRI.data$KTAD.5, KTAD.6 = DPRI.data$KTAD.6, KTAD.7 = DPRI.data$KTAD.7, 
+    KTAD.10 = DPRI.data$KTAD.10, KTAD.11 = DPRI.data$KTAD.11, KTAD.12 = DPRI.data$KTAD.12)
+</code></pre>
+
+<pre><code>## Error: object &#39;DPRI.data&#39; not found
+</code></pre>
+
+<p>Then we retrieve the appropriate variables from the RCML data set.  In addition we remove the rows with zero values.</p>
+
+<pre><code class="r">attach(RCML.data)
+</code></pre>
+
+<pre><code>Error: object &#39;RCML.data&#39; not found
+</code></pre>
+
+<pre><code class="r">RCML &lt;- data.frame(TeachEff = F1c, TeachBelief = F2CA, Math = MKATE)
+</code></pre>
+
+<pre><code>Error: object &#39;F1c&#39; not found
+</code></pre>
+
+<pre><code class="r">detach(RCML.data)
+</code></pre>
+
+<pre><code>Error: invalid &#39;name&#39; argument
+</code></pre>
+
+<pre><code class="r">RCML$TPSK &lt;- apply(TPSK, 1, mean)
+</code></pre>
+
+<pre><code>Error: object &#39;TPSK&#39; not found
+</code></pre>
+
+<pre><code class="r">RCML$TEK &lt;- apply(TEK, 1, mean)
+</code></pre>
+
+<pre><code>Error: object &#39;TEK&#39; not found
+</code></pre>
+
+<pre><code class="r">RCML &lt;- RCML[-c(6, 7, 13, 19, 21, 25, 29, 31), ]
+</code></pre>
+
+<pre><code>Error: object &#39;RCML&#39; not found
+</code></pre>
+
+<pre><code class="r">print(RCML)
+</code></pre>
+
+<pre><code>Error: object &#39;RCML&#39; not found
+</code></pre>
+
+<p>First we consider these 6 factors independently and calculate their correlations.
+[need to add &ldquo;Cultural beliefs&rdquo;, &ldquo;Racial beliefs&rdquo;, and &ldquo;Teach&rdquo;]</p>
+
+<pre><code class="r">corRCML &lt;- cor(RCML)
+</code></pre>
+
+<pre><code>Error: object &#39;RCML&#39; not found
+</code></pre>
+
+<pre><code class="r">print(corRCML)
+</code></pre>
+
+<pre><code>Error: object &#39;corRCML&#39; not found
+</code></pre>
+
+<pre><code class="r"># library(Kmisc) kTable(corRCML)
+</code></pre>
+
+<p>Now that we have the predictor and outcome variables we can run the linear and quadratic models.</p>
+
+<p>A. Math predicted by TEK (linear)</p>
+
+<pre><code class="r">Reg.1 &lt;- lm(RCML$Math ~ RCML$TEK)
+</code></pre>
+
+<pre><code>Error: object &#39;RCML&#39; not found
+</code></pre>
+
+<pre><code class="r">summary(Reg.1)
+</code></pre>
+
+<pre><code>Error: object &#39;Reg.1&#39; not found
+</code></pre>
+
+<p>And we plot it</p>
+
+<pre><code class="r">p.1 &lt;- ggplot(RCML, aes(x = TEK, y = Math)) + geom_point() + stat_smooth(method = &quot;lm&quot;, 
+    formula = y ~ x, size = 1, se = FALSE)
+</code></pre>
+
+<pre><code>## Error: object &#39;RCML&#39; not found
+</code></pre>
+
+<pre><code class="r">p.1
+</code></pre>
+
+<pre><code>## Error: object &#39;p.1&#39; not found
+</code></pre>
+
+<p>B: Teaching efficacy predicted by TEK</p>
+
+<pre><code class="r">Reg.2 &lt;- lm(RCML$TeachEff ~ RCML$TEK)
+</code></pre>
+
+<pre><code>Error: object &#39;RCML&#39; not found
+</code></pre>
+
+<pre><code class="r">summary(Reg.2)
+</code></pre>
+
+<pre><code>Error: object &#39;Reg.2&#39; not found
+</code></pre>
+
+<p>And we plot it</p>
+
+<pre><code class="r">p.2 &lt;- ggplot(RCML, aes(x = TEK, y = TeachEff)) + geom_point() + stat_smooth(method = &quot;lm&quot;, 
+    formula = y ~ x, size = 1, se = FALSE)
+</code></pre>
+
+<pre><code>## Error: object &#39;RCML&#39; not found
+</code></pre>
+
+<pre><code class="r">p.2
+</code></pre>
+
+<pre><code>## Error: object &#39;p.2&#39; not found
+</code></pre>
+
+<p>C. Teaching beliefs predicted by TEK</p>
+
+<pre><code class="r">Reg.3 &lt;- lm(RCML$TeachBelief ~ RCML$TEK)
+</code></pre>
+
+<pre><code>Error: object &#39;RCML&#39; not found
+</code></pre>
+
+<pre><code class="r">summary(Reg.3)
+</code></pre>
+
+<pre><code>Error: object &#39;Reg.3&#39; not found
+</code></pre>
+
+<p>And we plot it</p>
+
+<pre><code class="r">p.3 &lt;- ggplot(RCML, aes(x = TEK, y = TeachBelief)) + geom_point() + stat_smooth(method = &quot;lm&quot;, 
+    formula = y ~ x, size = 1, se = FALSE)
+</code></pre>
+
+<pre><code>## Error: object &#39;RCML&#39; not found
+</code></pre>
+
+<pre><code class="r">p.3
+</code></pre>
+
+<pre><code>## Error: object &#39;p.3&#39; not found
+</code></pre>
+
+<p>D. Teaching beliefs predicted by TPSK</p>
+
+<pre><code class="r">Reg.4 &lt;- lm(RCML$TeachBelief ~ RCML$TPSK)
+</code></pre>
+
+<pre><code>Error: object &#39;RCML&#39; not found
+</code></pre>
+
+<pre><code class="r">summary(Reg.4)
+</code></pre>
+
+<pre><code>Error: object &#39;Reg.4&#39; not found
+</code></pre>
+
+<p>And we plot it</p>
+
+<pre><code class="r">p.4 &lt;- ggplot(RCML, aes(x = TPSK, y = TeachBelief)) + geom_point() + stat_smooth(method = &quot;lm&quot;, 
+    formula = y ~ x, size = 1, se = FALSE)
+</code></pre>
+
+<pre><code>## Error: object &#39;RCML&#39; not found
+</code></pre>
+
+<pre><code class="r">p.4
+</code></pre>
+
+<pre><code>## Error: object &#39;p.4&#39; not found
+</code></pre>
+
+</body>
+
+</html>
+

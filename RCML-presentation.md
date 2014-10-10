@@ -2,36 +2,93 @@ RCML Presentation
 =================
 
 Initial settings, libraries and cleanup.
-```{r initial, message=FALSE, warning=FALSE}
-rm(list=ls())
+
+```r
+rm(list = ls())
 library(foreign)
 library(likert)
 library(xtable)
 setwd("~/Google Drive/MASC-351/")
 ```
 
+
 Cultural Awareness Beliefs Inventory
 ------------------------------------
 
 First we load the CABI data.  CABI = cultural awareness beliefs inventory.  20 multiple choice survey questions with values: "Strongly agree" (1), "Agree" (2), "Disagree" (3), and "Strongly disagree" (4). These were asked at the end of each semester.
-```{r loadCabi, warning=FALSE}
-CABI.data <- read.spss("CABIPOST.sav", to.data.frame=TRUE)
-CABI.data <- CABI.data[-c(62,77),]
+
+```r
+CABI.data <- read.spss("CABIPOST.sav", to.data.frame = TRUE)
+```
+
+```
+## Error: unable to open file: 'No such file or directory'
+```
+
+```r
+CABI.data <- CABI.data[-c(62, 77), ]
+```
+
+```
+## Error: object 'CABI.data' not found
+```
+
+```r
 CABI.data <- subset(CABI.data, select = -SRN)
 ```
 
+```
+## Error: object 'CABI.data' not found
+```
+
+
 Format the data and create the Likert object.
-```{r formatCabi}
-CABI.tmp <- lapply(CABI.data, factor, levels=1:4, labels=c("Strongly disagree","Disagree","Agree","Strongly agree"))
+
+```r
+CABI.tmp <- lapply(CABI.data, factor, levels = 1:4, labels = c("Strongly disagree", 
+    "Disagree", "Agree", "Strongly agree"))
+```
+
+```
+## Error: object 'CABI.data' not found
+```
+
+```r
 CABI <- data.frame(CABI.tmp)
-questions <- c("Q1","Q2","Q3","Q4","Q5","Q6","Q7","Q8","Q9","Q10","Q11","Q12","Q13","Q14","Q15","Q16","Q17","Q18","Q19","Q20")
+```
+
+```
+## Error: object 'CABI.tmp' not found
+```
+
+```r
+questions <- c("Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10", 
+    "Q11", "Q12", "Q13", "Q14", "Q15", "Q16", "Q17", "Q18", "Q19", "Q20")
 names(CABI) <- questions
+```
+
+```
+## Error: object 'CABI' not found
+```
+
+```r
 CABI.likert <- likert(CABI)
 ```
 
-```{r plotCabi, fig.width=7, fig.height=6}
-plot(CABI.likert) + labs(title="CABI")
 ```
+## Error: object 'CABI' not found
+```
+
+
+
+```r
+plot(CABI.likert) + labs(title = "CABI")
+```
+
+```
+## Error: object 'CABI.likert' not found
+```
+
 
 List of 20 multiple choice CABI questions:
 <TABLE border=0>
@@ -58,36 +115,145 @@ List of 20 multiple choice CABI questions:
 </TABLE>
 
 We display the Likert data as plots according to EFA groupings: "Teacher efficacy" (TE), "Teacher beliefs" (TB), "Cultural beliefs" (CB), and "Racial beliefs" (RB).
-```{r}
+
+```r
 attach(CABI)
+```
+
+```
+## Error: object 'CABI' not found
+```
+
+```r
 CABI.TE <- data.frame(Q6, Q7, Q8, Q9, Q12, Q13, Q14, Q15, Q16, Q17, Q18, Q19)
+```
+
+```
+## Error: object 'Q6' not found
+```
+
+```r
 CABI.TE.likert <- likert(CABI.TE)
+```
+
+```
+## Error: object 'CABI.TE' not found
+```
+
+```r
 
 CABI.TB <- data.frame(Q2, Q3, Q4, Q5)
+```
+
+```
+## Error: object 'Q2' not found
+```
+
+```r
 CABI.TB.likert <- likert(CABI.TB)
+```
+
+```
+## Error: object 'CABI.TB' not found
+```
+
+```r
 
 CABI.CB <- data.frame(Q11, Q18, Q20)
+```
+
+```
+## Error: object 'Q11' not found
+```
+
+```r
 CABI.CB.likert <- likert(CABI.CB)
+```
+
+```
+## Error: object 'CABI.CB' not found
+```
+
+```r
 
 CABI.RB <- data.frame(Q1, Q19)
+```
+
+```
+## Error: object 'Q1' not found
+```
+
+```r
 CABI.RB.likert <- likert(CABI.RB)
+```
+
+```
+## Error: object 'CABI.RB' not found
+```
+
+```r
 detach(CABI)
 ```
 
-```{r fig.width=7, fig.height=6}
-plot(CABI.TE.likert) + labs(title="CABI - Teacher efficacy")
-plot(CABI.TB.likert) + labs(title="CABI - Teacher beliefs")
-plot(CABI.CB.likert) + labs(title="CABI - Cultural beliefs")
-plot(CABI.RB.likert) + labs(title="CABI - Racial beliefs")
 ```
+## Error: invalid 'name' argument
+```
+
+
+
+```r
+plot(CABI.TE.likert) + labs(title = "CABI - Teacher efficacy")
+```
+
+```
+## Error: object 'CABI.TE.likert' not found
+```
+
+```r
+plot(CABI.TB.likert) + labs(title = "CABI - Teacher beliefs")
+```
+
+```
+## Error: object 'CABI.TB.likert' not found
+```
+
+```r
+plot(CABI.CB.likert) + labs(title = "CABI - Cultural beliefs")
+```
+
+```
+## Error: object 'CABI.CB.likert' not found
+```
+
+```r
+plot(CABI.RB.likert) + labs(title = "CABI - Racial beliefs")
+```
+
+```
+## Error: object 'CABI.RB.likert' not found
+```
+
 
 Diversity Preparedness Response Inventory
 -----------------------------------------
 First we import and process the SPSS data set first:
-```{r DPRIload, warning=FALSE}
-DPRI.data <- read.spss("diversity1.sav", to.data.frame=TRUE)
-DPRI.data <- subset(DPRI.data, select = -c(Researchcode,DIAdinner,KTADdinner))
+
+```r
+DPRI.data <- read.spss("diversity1.sav", to.data.frame = TRUE)
 ```
+
+```
+## Error: unable to open file: 'No such file or directory'
+```
+
+```r
+DPRI.data <- subset(DPRI.data, select = -c(Researchcode, DIAdinner, KTADdinner))
+```
+
+```
+## Error: object 'DPRI.data' not found
+```
+
 
 There are 32 questions, which are too many to display conveniently on a single plot. Hence we split it into the KTAD (knowledge for teaching algebra for diversity) and DIA (diversity awareness).  The following table shows the activities with the label used in the graphs to identify them
 
@@ -129,37 +295,132 @@ There are 32 questions, which are too many to display conveniently on a single p
 [NOTE: we state in this presentation that we do not show the SecLife data.  However, we have SL items in this data set.]
 
 First we format the data and create the Likert object.
-```{r DPRIprocess}
-DPRI.tmp <- lapply(DPRI.data, factor, levels=1:4, labels=c("No change","Made me rethink","Changed somewhat","Changed a lot"))
+
+```r
+DPRI.tmp <- lapply(DPRI.data, factor, levels = 1:4, labels = c("No change", 
+    "Made me rethink", "Changed somewhat", "Changed a lot"))
+```
+
+```
+## Error: object 'DPRI.data' not found
+```
+
+```r
 DPRI <- data.frame(DPRI.tmp)
-questions <- c("DIA.1","DIA.2","DIA.3","DIA.4",
-               "KTAD.1","KTAD.2","KTAD.3","KTAD.4",
-               "DIA.5","DIA.6","DIA.7","DIA.8","DIA.9","DIA.10","DIA.11","DIA.12",
-               "KTAD.5","KTAD.6","KTAD.7","KTAD.8","KTAD.9","KTAD.10","KTAD.11","KTAD.12",
-               "DIA.13",
-               "KTAD.14",
-               "DIA.15","DIA.16","DIA.17",
-               "KTAD.18","KTAD.19","KTAD.20")
+```
+
+```
+## Error: object 'DPRI.tmp' not found
+```
+
+```r
+questions <- c("DIA.1", "DIA.2", "DIA.3", "DIA.4", "KTAD.1", "KTAD.2", "KTAD.3", 
+    "KTAD.4", "DIA.5", "DIA.6", "DIA.7", "DIA.8", "DIA.9", "DIA.10", "DIA.11", 
+    "DIA.12", "KTAD.5", "KTAD.6", "KTAD.7", "KTAD.8", "KTAD.9", "KTAD.10", "KTAD.11", 
+    "KTAD.12", "DIA.13", "KTAD.14", "DIA.15", "DIA.16", "DIA.17", "KTAD.18", 
+    "KTAD.19", "KTAD.20")
 names(DPRI) <- questions
+```
+
+```
+## Error: object 'DPRI' not found
+```
+
+```r
 DPRI.likert <- likert(DPRI)
 ```
 
+```
+## Error: object 'DPRI' not found
+```
+
+
 The we split the DPRI data into ints DIA and TKAD components.
-```{r splitDPRI}
+
+```r
 attach(DPRI)
-DPRI.DIA.tmp  <- DPRI[,c(1,2,3,4,9,10,11,12,13,14,15,16,25,27,28,29)]
-DPRI.KTAD.tmp <- DPRI[,c(5,6,7,8,17,18,19,20,21,22,23,24,26,30,31,32)]
+```
+
+```
+## Error: object 'DPRI' not found
+```
+
+```r
+DPRI.DIA.tmp <- DPRI[, c(1, 2, 3, 4, 9, 10, 11, 12, 13, 14, 15, 16, 25, 27, 
+    28, 29)]
+```
+
+```
+## Error: object 'DPRI' not found
+```
+
+```r
+DPRI.KTAD.tmp <- DPRI[, c(5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, 24, 26, 30, 
+    31, 32)]
+```
+
+```
+## Error: object 'DPRI' not found
+```
+
+```r
 detach(DPRI)
+```
+
+```
+## Error: invalid 'name' argument
+```
+
+```r
 DPRI.DIA <- data.frame(DPRI.DIA.tmp)
+```
+
+```
+## Error: object 'DPRI.DIA.tmp' not found
+```
+
+```r
 DPRI.KTAD <- data.frame(DPRI.KTAD.tmp)
+```
+
+```
+## Error: object 'DPRI.KTAD.tmp' not found
+```
+
+```r
 DPRI.DIA.likert <- likert(DPRI.DIA)
+```
+
+```
+## Error: object 'DPRI.DIA' not found
+```
+
+```r
 DPRI.KTAD.likert <- likert(DPRI.KTAD)
 ```
 
-```{r plotDPRI, fig.width=12, fig.height=6}
-plot(DPRI.DIA.likert,  wrap=18, center=1.5) + labs(title = "DPRI - DIA")
-plot(DPRI.KTAD.likert, wrap=18, center=1.5) + labs(title = "DPRI - KTAD")
 ```
+## Error: object 'DPRI.KTAD' not found
+```
+
+
+
+```r
+plot(DPRI.DIA.likert, wrap = 18, center = 1.5) + labs(title = "DPRI - DIA")
+```
+
+```
+## Error: object 'DPRI.DIA.likert' not found
+```
+
+```r
+plot(DPRI.KTAD.likert, wrap = 18, center = 1.5) + labs(title = "DPRI - KTAD")
+```
+
+```
+## Error: object 'DPRI.KTAD.likert' not found
+```
+
 
 Linear models of EFA factors
 -------------------------------
@@ -173,91 +434,281 @@ The following table shows our predictor and outcome variables:
 </table>
 
 We load the data used to calculate the models
-```{r loadRCML, warning=FALSE}
+
+```r
 RCML.data <- read.spss("spssdataRCML.sav", to.data.frame = TRUE)
 ```
 
-First we create the TPSK and TEK variables from the DPRI data.
-```{r}
-names(DPRI.data) <- questions
-TPSK <- data.frame(TKAD.1 = DPRI.data$KTAD.1,
-                   TKAD.2 = DPRI.data$KTAD.2,
-                   TKAD.3 = DPRI.data$KTAD.3,
-                   TKAD.4 = DPRI.data$KTAD.4)
-
-TEK  <- data.frame(KTAD.5 =  DPRI.data$KTAD.5,
-                   KTAD.6 =  DPRI.data$KTAD.6,
-                   KTAD.7 =  DPRI.data$KTAD.7,
-                   KTAD.10 = DPRI.data$KTAD.10, 
-                   KTAD.11 = DPRI.data$KTAD.11,
-                   KTAD.12 = DPRI.data$KTAD.12)
 ```
+## Error: unable to open file: 'No such file or directory'
+```
+
+
+First we create the TPSK and TEK variables from the DPRI data.
+
+```r
+names(DPRI.data) <- questions
+```
+
+```
+## Error: object 'DPRI.data' not found
+```
+
+```r
+TPSK <- data.frame(TKAD.1 = DPRI.data$KTAD.1, TKAD.2 = DPRI.data$KTAD.2, TKAD.3 = DPRI.data$KTAD.3, 
+    TKAD.4 = DPRI.data$KTAD.4)
+```
+
+```
+## Error: object 'DPRI.data' not found
+```
+
+```r
+
+TEK <- data.frame(KTAD.5 = DPRI.data$KTAD.5, KTAD.6 = DPRI.data$KTAD.6, KTAD.7 = DPRI.data$KTAD.7, 
+    KTAD.10 = DPRI.data$KTAD.10, KTAD.11 = DPRI.data$KTAD.11, KTAD.12 = DPRI.data$KTAD.12)
+```
+
+```
+## Error: object 'DPRI.data' not found
+```
+
 
 Then we retrieve the appropriate variables from the RCML data set.  In addition we remove the rows with zero values.
-```{r extractRegressionVariables, comment=NA}
+
+```r
 attach(RCML.data)
+```
+
+```
+Error: object 'RCML.data' not found
+```
+
+```r
 RCML <- data.frame(TeachEff = F1c, TeachBelief = F2CA, Math = MKATE)
+```
+
+```
+Error: object 'F1c' not found
+```
+
+```r
 detach(RCML.data)
+```
+
+```
+Error: invalid 'name' argument
+```
+
+```r
 RCML$TPSK <- apply(TPSK, 1, mean)
-RCML$TEK  <- apply(TEK, 1, mean)
-RCML <- RCML[-c(6,7,13,19,21,25,29,31),]
+```
+
+```
+Error: object 'TPSK' not found
+```
+
+```r
+RCML$TEK <- apply(TEK, 1, mean)
+```
+
+```
+Error: object 'TEK' not found
+```
+
+```r
+RCML <- RCML[-c(6, 7, 13, 19, 21, 25, 29, 31), ]
+```
+
+```
+Error: object 'RCML' not found
+```
+
+```r
 print(RCML)
 ```
+
+```
+Error: object 'RCML' not found
+```
+
 
 First we consider these 6 factors independently and calculate their correlations.
 [need to add "Cultural beliefs", "Racial beliefs", and "Teach"]
 
-```{r comment=NA}
+
+```r
 corRCML <- cor(RCML)
+```
+
+```
+Error: object 'RCML' not found
+```
+
+```r
 print(corRCML)
 ```
-```{r}
-#library(Kmisc)
-#kTable(corRCML)
+
 ```
+Error: object 'corRCML' not found
+```
+
+
+```r
+# library(Kmisc) kTable(corRCML)
+```
+
 
 Now that we have the predictor and outcome variables we can run the linear and quadratic models.
 
 A. Math predicted by TEK (linear)
-```{r comment=NA}
+
+```r
 Reg.1 <- lm(RCML$Math ~ RCML$TEK)
+```
+
+```
+Error: object 'RCML' not found
+```
+
+```r
 summary(Reg.1)
 ```
+
+```
+Error: object 'Reg.1' not found
+```
+
 And we plot it
-```{r fig.width=12, fig.height=6}
-p.1 <- ggplot(RCML, aes(x = TEK, y = Math)) + geom_point() + stat_smooth(method = "lm", formula = y ~ x, size =1, se=FALSE)
+
+```r
+p.1 <- ggplot(RCML, aes(x = TEK, y = Math)) + geom_point() + stat_smooth(method = "lm", 
+    formula = y ~ x, size = 1, se = FALSE)
+```
+
+```
+## Error: object 'RCML' not found
+```
+
+```r
 p.1
 ```
 
+```
+## Error: object 'p.1' not found
+```
+
+
 B: Teaching efficacy predicted by TEK
-```{r comment=NA}
+
+```r
 Reg.2 <- lm(RCML$TeachEff ~ RCML$TEK)
+```
+
+```
+Error: object 'RCML' not found
+```
+
+```r
 summary(Reg.2)
 ```
+
+```
+Error: object 'Reg.2' not found
+```
+
 And we plot it
-```{r fig.width=12, fig.height=6}
-p.2 <- ggplot(RCML, aes(x = TEK, y = TeachEff)) + geom_point() + stat_smooth(method = "lm", formula = y ~ x, size =1, se=FALSE)
+
+```r
+p.2 <- ggplot(RCML, aes(x = TEK, y = TeachEff)) + geom_point() + stat_smooth(method = "lm", 
+    formula = y ~ x, size = 1, se = FALSE)
+```
+
+```
+## Error: object 'RCML' not found
+```
+
+```r
 p.2
 ```
 
+```
+## Error: object 'p.2' not found
+```
+
+
 C. Teaching beliefs predicted by TEK
-```{r comment=NA}
+
+```r
 Reg.3 <- lm(RCML$TeachBelief ~ RCML$TEK)
+```
+
+```
+Error: object 'RCML' not found
+```
+
+```r
 summary(Reg.3)
 ```
+
+```
+Error: object 'Reg.3' not found
+```
+
 And we plot it
-```{r fig.width=12, fig.height=6}
-p.3 <- ggplot(RCML, aes(x = TEK, y = TeachBelief)) + geom_point() + stat_smooth(method = "lm", formula = y ~ x, size =1, se=FALSE)
+
+```r
+p.3 <- ggplot(RCML, aes(x = TEK, y = TeachBelief)) + geom_point() + stat_smooth(method = "lm", 
+    formula = y ~ x, size = 1, se = FALSE)
+```
+
+```
+## Error: object 'RCML' not found
+```
+
+```r
 p.3
 ```
 
+```
+## Error: object 'p.3' not found
+```
+
+
 D. Teaching beliefs predicted by TPSK
-```{r comment=NA}
+
+```r
 Reg.4 <- lm(RCML$TeachBelief ~ RCML$TPSK)
+```
+
+```
+Error: object 'RCML' not found
+```
+
+```r
 summary(Reg.4)
 ```
+
+```
+Error: object 'Reg.4' not found
+```
+
 And we plot it
-```{r fig.width=12, fig.height=6}
-p.4 <- ggplot(RCML, aes(x = TPSK, y = TeachBelief)) + geom_point() + stat_smooth(method = "lm", formula = y ~ x, size =1, se=FALSE)
+
+```r
+p.4 <- ggplot(RCML, aes(x = TPSK, y = TeachBelief)) + geom_point() + stat_smooth(method = "lm", 
+    formula = y ~ x, size = 1, se = FALSE)
+```
+
+```
+## Error: object 'RCML' not found
+```
+
+```r
 p.4
 ```
+
+```
+## Error: object 'p.4' not found
+```
+
