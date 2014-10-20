@@ -10,7 +10,7 @@ First we import the data from reduced csv files that were exported from Qualtric
 
 ```{r echo=FALSE}
 rm(list=ls())
-setwd("~/Dropbox/KATE Admin/KATE-Fall-2013/")
+setwd("~/Dropbox/KATE-Admin/KATE-Fall-2013/")
 library("likert")
 diversity.1 <- read.csv("Diversity_Part_1_Fall_2013_reduced.csv", header=TRUE, sep=",", quote="\"")
 diversity.2 <- read.csv("Diversity_Part_2_Fall_2013_reduced.csv", header=TRUE, sep=",", quote="\"")
@@ -274,7 +274,7 @@ First we import the data from reduced csv files that were exported from Qualtric
 
 ```{r echo=FALSE}
 rm(list=ls())
-setwd("~/Dropbox/KATE Admin/KATE-Fall-2013/")
+setwd("~/Dropbox/KATE-Admin/KATE-Fall-2013/")
 library("likert")
 diversity.1 <- read.csv("Diversity_Part_1_Fall_2013_reduced.csv", header=TRUE, sep=",", quote="\"")
 diversity.2 <- read.csv("Diversity_Part_2_Fall_2013_reduced.csv", header=TRUE, sep=",", quote="\"")
