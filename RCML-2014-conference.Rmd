@@ -1,0 +1,60 @@
+---
+title: "RCML-2014-conference"
+author: "Oner, Indiogine et alii"
+date: "October 22, 2014"
+output: html_document
+---
+
+Initial settings, libraries and cleanup.
+```{r initial, message=FALSE, warning=FALSE}
+rm(list=ls())
+library(xlsx)
+library(likert)
+library(pmr)
+setwd("~/Code/RCML/")
+```
+
+# Research Question 1
+Import raw scores of algebra misconceptions
+```{r}
+temp <- read.xlsx("Fall-2013-KATE-post.xlsx",sheetName="Misconceptions",stringsAsFactors=FALSE,colIndex=1:6)
+temp <- temp[-30,]
+DinnerRel       <- temp$Dinner / 25
+FoodDriveRel    <- temp$FoodDrive / 25
+X.valuesRel     <- temp$Xvalues / 2
+CoefficientsRel <- temp$Coefficients / 2
+ExprEqRel       <- temp$ExprEq / 2
+misconception <- data.frame(SRN          = temp$SRN,
+                            Dinner       = DinnerRel, 
+                            FoodDrive    = FoodDriveRel, 
+                            X.values     = X.valuesRel,
+                            Coefficients = CoefficientsRel,
+                            ExprEq       = ExprEqRel)
+misconception
+rm(temp)
+```
+
+Now we rank the misconceptions.
+```{r}
+misconception <- data.frame(misconception,
+                            Dinner.rank = NA,
+                            FoodDrive.rank = NA,
+                            X.values.rank = NA,
+                            Coefficients.rank = NA,
+                            ExprEq.rank = NA)
+```
+
+```{r}
+for (i in 1:nrow(misconception))
+  { rank(misconception[i, 2:6], ties.method="max") -> misconception[i,7:11] }
+
+print(misconception)
+```
+
+Analysis of the rankings of the misconceptions. See http://www.biomedcentral.com/1471-2288/13/65
+```{r}
+temp <- misconception[, c(7:11)]
+temp.agg <- rankagg(temp)
+destat(temp.agg)
+rm(temp, temp.agg)
+```
