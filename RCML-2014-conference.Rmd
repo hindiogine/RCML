@@ -50,11 +50,31 @@ for (i in 1:nrow(misconception))
 
 print(misconception)
 ```
+A high rank means a high score for the understanding and help to the student for the misconception.
 
-Analysis of the rankings of the misconceptions. See http://www.biomedcentral.com/1471-2288/13/65
+Analysis of the rankings of the misconceptions using the R library "pmr". See http://www.biomedcentral.com/1471-2288/13/65
 ```{r}
-temp <- misconception[, c(7:11)]
-temp.agg <- rankagg(temp)
-destat(temp.agg)
-rm(temp, temp.agg)
+my.ranks <- misconception[, c(7:11)]
+my.ranks.agg <- rankagg(my.ranks)
+destat(my.ranks.agg)
 ```
+We can see that the PST did best in the "unequal intervals for the independent variable" misconception and worst with the "linear equation coefficients".  Thus, in decreasing order of comprehension we have (1) Unequal x-values, (2) proportions, (3) percentages, (4) expression versus equation, and (5) linear equation coefficients.
+
+Now we test for uniformity of the five mean ranks we use a chi-square test. The following expression based on the rank means follows a chi-square distribution:
+
+(12N/(k(k+1))) times the summation of the square of the difference between the rank mean and (k+1)/2
+
+k: number of items, in our case 5
+N: number of observations, in our case 29
+
+```{r}
+de1 <- destat(my.ranks.agg)
+k.subtract <- (5+1)/2
+my.mean <- rep(k.subtract, 5)
+Nk.multiply <- (12*29)/(5*(5+1))
+my.chi <- Nk.multiply*sum((de1$mean.rank - my.mean)^2)
+print(my.chi)
+dchisq(my.chi, 4)
+```
+Based on the extremely low probability value of the chi-square statistic we conclude that the rank means are different, and thus there is a difference in capability of the PSTs in helping the students with misconceptions. 
+
