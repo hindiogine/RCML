@@ -17,10 +17,10 @@ setwd("~/Code/RCML/")
 # Research Question 1
 Import raw scores of algebra misconceptions
 ```{r}
-temp <- read.xlsx("Fall-2013-KATE-post.xlsx",sheetName="Misconceptions",stringsAsFactors=FALSE,colIndex=1:6)
-temp <- temp[-30,]
-DinnerRel       <- temp$Dinner / 25
-FoodDriveRel    <- temp$FoodDrive / 25
+temp <- read.xlsx("Fall-2013-KATE-post-help.xlsx",sheetName="misconception",stringsAsFactors=FALSE,colIndex=c(1,(3:7)))
+# temp <- temp[-30,]
+DinnerRel       <- temp$Dinner / 15
+FoodDriveRel    <- temp$FoodDrive / 15
 X.valuesRel     <- temp$Xvalues / 2
 CoefficientsRel <- temp$Coefficients / 2
 ExprEqRel       <- temp$ExprEq / 2
@@ -50,7 +50,7 @@ for (i in 1:nrow(misconception))
 
 print(misconception)
 ```
-A high rank means a high score for the understanding and help to the student for the misconception.
+A high rank means a high score for helping the student to resolve the misconception.
 
 Analysis of the rankings of the misconceptions using the R library "pmr". See http://www.biomedcentral.com/1471-2288/13/65
 ```{r}
