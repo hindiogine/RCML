@@ -121,3 +121,34 @@ print(my.result, short=FALSE)
 ```
 
 # Research question 3
+
+Load the spreadsheet with MTEBI and misconceptions scores.
+```{r load_MTEBI}
+rq3.data <- read.xlsx("RQ3dataset.xlsx", header=TRUE,
+                      sheetName="Sheet1", as.data.frame=TRUE,
+                      stringsAsFactors=FALSE, 
+                      colIndex=c(2:22,24:44,46:50), 
+                      endRow=29)
+rq3.data
+```
+
+Split the data into MTEBI pre-survey, MTEBI post-survey, and misconception tables.
+MTEBI PMTE: Q2, 3, 5, 6, 8, 11, 15, 16, 17, 18, 19, 20, 21
+MTEBI MTOE: Q1, 4, 7, 12, 13, 14
+
+
+```{r split_data}
+MTEBI.pre     <- data.frame(rq3.data[,1:21])
+MTEBI.post    <- data.frame(rq3.data[22:42])
+misconception <- data.frame(rq3.data[43:47])
+PMTE.pre      <- data.frame(rq3.data[,c(2,3,5,6,8,11,15)])
+MTOE.pre      <- data.frame(rq3.data[,c(1,4,7,12,13,14)])
+PMTE.post     <- data.frame(rq3.data[,c(23,24,26,27,29,32,36)])
+MTOE.post     <- data.frame(rq3.data[,c(22,25,28,33,34,35)])
+```
+
+We run correlation test between MTEBI components and misconceptions.
+```{r rq3_correlations}
+
+```
+
