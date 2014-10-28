@@ -223,3 +223,12 @@ MTOE.Q13.Pre.Percentages <- cbind(MTOE.pre$q13, misconception$Percentages)
 MTOE.Q14.Pre.Percentages <- cbind(MTOE.pre$q14, misconception$Percentages)
 ```
 ---->
+
+```{r use_hetcor}
+library(polycor)
+hetcor(rq3.data, ML=TRUE)
+```
+Need first to convert to ordinal data, otherwise everything is significant.
+The tests of bivariate normality, applied to the contingency table for
+each pair of variables, are highly statistically significant, indicating departures
+from binormality.
