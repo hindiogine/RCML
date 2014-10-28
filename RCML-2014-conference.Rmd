@@ -120,7 +120,7 @@ corr.test(big.table, method="spearman") -> my.result
 print(my.result, short=FALSE)
 ```
 
-# Research question 3
+# Research Question 3
 
 Load the spreadsheet with MTEBI and misconceptions scores.
 ```{r load_MTEBI}
@@ -129,7 +129,7 @@ rq3.data <- read.xlsx("RQ3dataset.xlsx", header=TRUE,
                       stringsAsFactors=FALSE, 
                       colIndex=c(2:22,24:44,46:50), 
                       endRow=29)
-rq3.data
+# rq3.data
 ```
 
 Split the data into MTEBI pre-survey, MTEBI post-survey, and misconception tables.
@@ -146,9 +146,60 @@ MTOE.pre      <- data.frame(rq3.data[,c(1,4,7,12,13,14)])
 PMTE.post     <- data.frame(rq3.data[,c(23,24,26,27,29,32,36)])
 MTOE.post     <- data.frame(rq3.data[,c(22,25,28,33,34,35)])
 ```
+<!----
+Combine pre and post PMTE and MTOE surveys with misconceptions
+```{r pre_post_misconception}
+PMTE.pre.misc  <- cbind(PMTE.pre, misconception)
+PMTE.post.misc <- cbind(PMTE.post, misconception)
+MTOE.pre.misc  <- cbind(MTOE.pre, misconception)
+MTOE.post.misc <- cbind(MTOE.post, misconception)
+```
+---->
 
-We run correlation test between MTEBI components and misconceptions.
-```{r rq3_correlations}
+Run Spearman correlations because polychoric correlations do not provide inferential test and psych::cor.ci does not work.
+```{r spearman}
+corr.1 <- corr.test(PMTE.pre.misc, method="spearman")
+corr.1$ci
 
+corr.2 <- corr.test(PMTE.post.misc, method="spearman")
+corr.2$ci
+
+corr.3 <- corr.test(MTOE.pre.misc, method="spearman")
+corr.3$ci
+
+corr.4 <- corr.test(MTOE.post.misc, method="spearman")
+corr.4$ci
 ```
 
+Significant results of MTEBI pre-survey: Q5 with ExpEq, Q4 with Percentages.
+
+Significant results of MTEBI post-survey: Q4 with SlopeInt, Q5 with Proportions, Q12 with Proportions and with ExpEq, Q15 with Proportions.
+
+## The belief statements
+
+Q4: When the mathematics grades of students improve, it is often due to their teacher having found a more effective teaching approach.
+
+Q5: I know how to teach mathematics concepts effectively.
+
+Q12: The teacher is generally responsible for the achievement of students in mathematics.
+
+Q15: I will find it difficult to use manipulatives to explain to students why mathematics works (reverse coding).
+
+<!----
+Create 2-column matrices for the MTEBI/misconception pairs.
+```{r rq3_combinations}
+MTOE.Q1.Pre.Proportions  <- cbind(MTOE.pre$q1, misconception$Percentages)
+MTOE.Q4.Pre.Proportions  <- cbind(MTOE.pre$q4, misconception$Percentages)
+MTOE.Q7.Pre.Proportions  <- cbind(MTOE.pre$q7, misconception$Percentages)
+MTOE.Q12.Pre.Proportions <- cbind(MTOE.pre$q12, misconception$Percentages)
+MTOE.Q13.Pre.Proportions <- cbind(MTOE.pre$q13, misconception$Percentages)
+MTOE.Q14.Pre.Proportions <- cbind(MTOE.pre$q14, misconception$Percentages)
+
+MTOE.Q1.Pre.Percentages  <- cbind(MTOE.pre$q1, misconception$Percentages)
+MTOE.Q4.Pre.Percentages  <- cbind(MTOE.pre$q4, misconception$Percentages)
+MTOE.Q7.Pre.Percentages  <- cbind(MTOE.pre$q7, misconception$Percentages)
+MTOE.Q12.Pre.Percentages <- cbind(MTOE.pre$q12, misconception$Percentages)
+MTOE.Q13.Pre.Percentages <- cbind(MTOE.pre$q13, misconception$Percentages)
+MTOE.Q14.Pre.Percentages <- cbind(MTOE.pre$q14, misconception$Percentages)
+```
+---->
