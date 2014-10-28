@@ -185,6 +185,26 @@ Q12: The teacher is generally responsible for the achievement of students in mat
 
 Q15: I will find it difficult to use manipulatives to explain to students why mathematics works (reverse coding).
 
+
+
+
+MTEBI statement                                                          pre- or post-survey    Misconception
+-----------------------------------------------------------------------------------------------------------------------
+“When the grades improve, it is often due to their teacher”       pre                             Percentages
+                                                                  post                           Slope/Intercept
+
+“I know how to teach mathematics concepts effectively”           pre                             Expression vs. Equation
+                                                                 post                           Proportions
+
+“The teacher is generally responsible for the achievement”      post                           Proportions
+                                                                post                           Expression vs. Equation
+
+"I will find it difficult to use manipulatives” (reverse coded) post                           Proportions
+---------------------------------------------------------------------------------------------------------------------
+Belief statements significantly correlated to misconception PCK.
+
+
+
 <!----
 Create 2-column matrices for the MTEBI/misconception pairs.
 ```{r rq3_combinations}
